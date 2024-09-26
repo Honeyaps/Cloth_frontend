@@ -8,26 +8,15 @@ export const OTPModal = ({ show, handleClose }) => {
       <Modal.Header closeButton>
         <Modal.Title>OTP Verification</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        <div>
-          <form action="">
-            <div className="mb-3">
-              <label htmlFor="otp" className="form-label">
-                OTP
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="otp"
-                placeholder="Enter OTP"
-              />
-            </div>
-          </form>
-          <Button variant="primary" className='btn btn-primary w-100' onClick={handleClose}>
-          Submit OTP
+      <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Close
         </Button>
-        </div>
-      </Modal.Body>
+        <Button variant="primary" onClick={handleClose}>
+          Save Changes
+        </Button>
+      </Modal.Footer>
     </Modal>
   );
 };

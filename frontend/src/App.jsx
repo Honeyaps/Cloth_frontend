@@ -1,11 +1,12 @@
 import './App.css';
 import { OTPModal } from './app/components/UserPanel/registration/otpverif';
-import { SignupModal } from './app/components/UserPanel/registration/signup';
+import MyModal from './app/components/UserPanel/registration/signup';
 import Navbar from './app/components/UserPanel/userComponents/navbar/navbar';
 import { useState } from 'react';
 
 function App() {
-  // Manage visibility state for both modalsr  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  // Manage visibility state for both modals
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
 
   // Handlers for signup modal
@@ -23,12 +24,14 @@ function App() {
     <>
       <Navbar handleshow={handleShowSignUp} />
 
-      <SignupModal
+      {/* Sign-up modal */}
+      <MyModal
         show={showSignUpModal}
         handleClose={handleCloseSignUp}
-        handleSave={handleShowOTP} 
+        handleSave={handleShowOTP} // Open OTP modal on save
       />
 
+      {/* OTP modal */}
       <OTPModal
         show={showOTPModal}
         handleClose={handleCloseOTP}
