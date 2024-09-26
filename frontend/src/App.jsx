@@ -27,7 +27,7 @@ function App() {
       <MyModal
         show={showSignUpModal}
         handleClose={handleCloseSignUp}
-        handleSave={handleShowOTP} 
+        // handleSave={handleShowOTP} 
       />
 
       <OTPModal
