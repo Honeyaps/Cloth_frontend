@@ -1,14 +1,14 @@
-// import axios from 'axios';
+import axios from 'axios';
+import { env } from '../../environments/env';
 
-// // const API_URL = "https://cloth-ecomm-api.vercel.app/v1";
+const API_URL = env.API_URL
 
-// class UserAPIService {
-//     constructor() {}
+class UserAPIService {
+    static async generateOtp(data) {
+        const response = await axios.post(`${API_URL}/user/generateOtp`, data)
+        return response.data;
+    }
+
+  }
   
-//     // Pass email to the API for generating OTP
-//     generateOtp(email) {
-//       return axios.post("https://cloth-ecomm-api.vercel.app/v1/user/generateOtp", { email });
-//     }
-//   }
-  
-// export default UserAPIService;
+export default UserAPIService;

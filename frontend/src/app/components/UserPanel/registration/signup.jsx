@@ -1,42 +1,57 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import UserAPIService from '../../../services/user_service';
 
-const MyModal = ({ show, handleClose }) => {
-  // State for the email field
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState(null);  // State for handling error
-  const [successMessage, setSuccessMessage] = useState(null); // State for success message
+const MyModal = ({ show, handleClose,handleshow }) => {
+    const [formData, setFormData] = useState({
+        email: '',
+        username: '',
+        password: '',
+        confirmPassword: ''
+      });
+  const [error, setError] = useState(null);  
+  const [successMessage, setSuccessMessage] = useState(null); 
 
-  // Handle email input change
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value
+    }));
   };
 
-  // Handle form submission
+  const validation = () => {
+    const { email, username, password, confirmPassword } = formData;
+    if (!email || !username || !password || !confirmPassword) {
+      setError('All fields are required');
+      return false;
+    }
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return false;
+    }
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError(null); // Reset error before submission
-    setSuccessMessage(null); // Reset success message before submission
+    setError(null); 
+    setSuccessMessage(null); 
 
+    if (!validation()) {
+      return;
+    }
+  
     try {
-      const response = await fetch('https://cloth-ecomm-api.vercel.app/v1/user/generateOtp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to generate OTP. Please try again.');
-      }
-
-      const data = await response.json();
-      setSuccessMessage('OTP generated successfully. Please check your email!');
-      setEmail(''); // Reset email input after success
+        const response = await UserAPIService.generateOtp({ email: formData.email });
+        setSuccessMessage(response.data.message);
     } catch (error) {
-      setError(error.message || 'An unexpected error occurred.');
+        setError(error.response.data.message);
     }
   };
 
@@ -47,10 +62,23 @@ const MyModal = ({ show, handleClose }) => {
       </Modal.Header>
       <Modal.Body>
         <div>
-          {error && <p className="text-danger">{error}</p>} {/* Display error message */}
-          {successMessage && <p className="text-success">{successMessage}</p>} {/* Display success message */}
           
           <form onSubmit={handleSubmit}>
+
+          <div className="mb-3">
+              <label htmlFor="username" className="form-label">
+                Username
+              </label>
+              <input
+                type="text"
+                name="username"
+                className="form-control"
+                placeholder="Enter username"
+                value={formData.username} 
+                onChange={handleOnChange} 
+                required 
+              />
+            </div>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
                 Email address
@@ -60,15 +88,47 @@ const MyModal = ({ show, handleClose }) => {
                 name="email"
                 className="form-control"
                 placeholder="Enter email"
-                value={email} // Controlled component
-                onChange={handleEmailChange} // Handle input change
-                required // Make the input required
+                value={formData.email} 
+                onChange={handleOnChange} 
+                required 
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">
+              Password
+              </label>
+              <input
+                type="text"
+                name="password"
+                className="form-control"
+                placeholder="Enter password"
+                value={formData.password} 
+                onChange={handleOnChange} 
+                required 
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="confirmPassword" className="form-label">
+             Confirm Password
+              </label>
+              <input
+                type="text"
+                name="confirmPassword"
+                className="form-control"
+                placeholder="confirm password"
+                value={formData.confirmPassword} 
+                onChange={handleOnChange} 
+                required 
               />
             </div>
 
-            <button type="submit" className="btn btn-primary w-100">
+
+            {error && <p className="text-danger">{error}</p>} 
+          {successMessage && <p className="text-success">{successMessage}</p>} 
+
+            <Button type="submit" className="btn btn-primary w-100"  onClick={handleshow}>
               Sign up
-            </button>
+            </Button>
           </form>
         </div>
       </Modal.Body>
