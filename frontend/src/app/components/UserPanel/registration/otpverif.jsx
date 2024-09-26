@@ -24,7 +24,7 @@ export const OTPModal = ({ show, handleClose }) => {
             </div>
           </form>
           <Button variant="primary" className='btn btn-primary w-100' onClick={handleClose}>
-          Submit
+          Submit OTP
         </Button>
         </div>
       </Modal.Body>
