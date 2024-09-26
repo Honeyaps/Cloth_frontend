@@ -1,23 +1,39 @@
 import './App.css';
-// Import both Navbar and MyModal
-import MyModal from './app/components/UserPanel/registration/signup';
+import { OTPModal } from './app/components/UserPanel/Registration/otpverif';
+import { SignupModal } from './app/components/UserPanel/Registration/signup';
 import Navbar from './app/components/UserPanel/userComponents/navbar/navbar';
 import { useState } from 'react';
 
 function App() {
-  // Manage modal visibility state here
-  const [showModal, setShowModal] = useState(false);
+  // Manage visibility state for both modals
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showOTPModal, setShowOTPModal] = useState(false);
 
-  const handleShow = () => setShowModal(true);
-  const handleClose = () => setShowModal(false);
+  // Handlers for signup modal
+  const handleShowSignUp = () => setShowSignUpModal(true);
+  const handleCloseSignUp = () => setShowSignUpModal(false);
+
+  // Handlers for OTP modal
+  const handleShowOTP = () => {
+    setShowSignUpModal(false); // Close signup modal
+    setShowOTPModal(true); // Open OTP modal
+  };
+  const handleCloseOTP = () => setShowOTPModal(false);
 
   return (
     <>
-      {/* Pass handleShow to Navbar */}
-      <Navbar handleshow={handleShow} />
-      
-      {/* Keep MyModal with modal visibility and close handler */}
-      <MyModal show={showModal} handleClose={handleClose} />
+      <Navbar handleshow={handleShowSignUp} />
+
+      <SignupModal
+        show={showSignUpModal}
+        handleClose={handleCloseSignUp}
+        handleSave={handleShowOTP} 
+      />
+
+      <OTPModal
+        show={showOTPModal}
+        handleClose={handleCloseOTP}
+      />
     </>
   );
 }
