@@ -15,8 +15,8 @@ function App() {
 
   // Handlers for OTP modal
   const handleShowOTP = () => {
-    setShowSignUpModal(false); // Close signup modal
-    setShowOTPModal(true); // Open OTP modal
+    setShowSignUpModal(false); 
+    setShowOTPModal(true);
   };
   const handleCloseOTP = () => setShowOTPModal(false);
 
@@ -24,14 +24,12 @@ function App() {
     <>
       <Navbar handleshow={handleShowSignUp} />
 
-      {/* Sign-up modal */}
       <MyModal
         show={showSignUpModal}
         handleClose={handleCloseSignUp}
-        handleSave={handleShowOTP} // Open OTP modal on save
+        handleSave={handleShowOTP} 
       />
 
-      {/* OTP modal */}
       <OTPModal
         show={showOTPModal}
         handleClose={handleCloseOTP}
