@@ -4,24 +4,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import UserAPIService from '../../../services/user_service';
 
 
-const MyModal = ({ show, handleClose, handleOpenOTP }) => {
-  const [formData, setFormData] = useState({
-    email: '',
-    username: '',
-    password: '',
-    confirmPassword: ''
-  });
+const MyModal = ({ show, handleClose, handleOpenOTP, formData, onFormDataUpdate  }) => {
+  
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
-
   
-
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value
-    }));
+    const updatedFormData = { ...formData, [name]: value };
+    onFormDataUpdate(updatedFormData); 
   };
 
   const validation = () => {
@@ -62,82 +53,80 @@ const MyModal = ({ show, handleClose, handleOpenOTP }) => {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Sign up</Modal.Title>
+        <Modal.Title>Sign Up</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <div>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="username" className="form-label">
+              Username
+            </label>
+            <input
+              type="text"
+              name="username"
+              className="form-control"
+              id="username"
+              placeholder="Enter username"
+              value={formData.username}
+              onChange={handleOnChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">
+              Email address
+            </label>
+            <input
+              type="email"
+              name="email"
+              className="form-control"
+              id="email"
+              placeholder="Enter email"
+              value={formData.email}
+              onChange={handleOnChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label">
+              Password
+            </label>
+            <input
+              type="password" 
+              name="password"
+              className="form-control"
+              id="password"
+              placeholder="Enter password"
+              value={formData.password}
+              onChange={handleOnChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="confirmPassword" className="form-label">
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              name="confirmPassword"
+              className="form-control"
+              id="confirmPassword"
+              placeholder="Confirm password"
+              value={formData.confirmPassword}
+              onChange={handleOnChange}
+              required
+            />
+          </div>
 
-          <form onSubmit={handleSubmit}>
+          {error && <p className="text-danger">{error}</p>}
+          {successMessage && <p className="text-success">{successMessage}</p>}
 
-            <div className="mb-3">
-              <label htmlFor="username" className="form-label">
-                Username
-              </label>
-              <input
-                type="text"
-                name="username"
-                className="form-control"
-                placeholder="Enter username"
-                value={formData.username}
-                onChange={handleOnChange}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">
-                Email address
-              </label>
-              <input
-                type="email"
-                name="email"
-                className="form-control"
-                placeholder="Enter email"
-                value={formData.email}
-                onChange={handleOnChange}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="password" className="form-label">
-                Password
-              </label>
-              <input
-                type="text"
-                name="password"
-                className="form-control"
-                placeholder="Enter password"
-                value={formData.password}
-                onChange={handleOnChange}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="confirmPassword" className="form-label">
-                Confirm Password
-              </label>
-              <input
-                type="text"
-                name="confirmPassword"
-                className="form-control"
-                placeholder="confirm password"
-                value={formData.confirmPassword}
-                onChange={handleOnChange}
-                required
-              />
-            </div>
-
-
-            {error && <p className="text-danger">{error}</p>}
-            {successMessage && <p className="text-success">{successMessage}</p>}
-
-            <Button type="submit" className="btn btn-primary w-100" >
-              Sign up
-            </Button>
-          </form>
-        </div>
+          <Button type="submit" className="btn btn-primary w-100">
+            Sign Up
+          </Button>
+        </form>
       </Modal.Body>
     </Modal>
-   
   );
 };
 

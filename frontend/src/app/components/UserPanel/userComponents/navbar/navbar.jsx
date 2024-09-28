@@ -1,17 +1,29 @@
 import React, { useState } from "react";
-import MyModal from "../../registration/signup"; // Import the signup modal component
-import { OTPModal } from "../../registration/otpverif"; // Import OTP modal component
+import MyModal from "../../registration/signup"; 
+import { OTPModal } from "../../registration/otpverif"; 
 
 export default function Navbar() {
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    username: '',
+    password: '',
+  });
+  
+
+  const handleFormDataUpdate = (newFormData) => {
+    setFormData(newFormData);
+  };
 
   const handleShowSignUp = () => setShowSignUpModal(true);
   const handleCloseSignUp = () => setShowSignUpModal(false);
 
   const handleOpenOTP = () => {
-    setShowSignUpModal(false); // Close the signup modal
-    setShowOTPModal(true);     // Open the OTP modal
+    if (!showOTPModal) { // Check if OTP modal is already open
+      setShowSignUpModal(false); 
+      setShowOTPModal(true);    
+    }   
   };
 
   const handleCloseOTP = () => setShowOTPModal(false);
@@ -24,18 +36,22 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Render Signup Modal */}
       {showSignUpModal && (
         <MyModal
           show={showSignUpModal}
           handleClose={handleCloseSignUp}
-          handleOpenOTP={handleOpenOTP} // Passing handleOpenOTP function to open OTP modal after successful signup
+          handleOpenOTP={handleOpenOTP} 
+          formData={formData}       
+          onFormDataUpdate={handleFormDataUpdate}
         />
       )}
 
-      {/* Render OTP Modal */}
       {showOTPModal && (
-        <OTPModal show={showOTPModal} handleClose={handleCloseOTP} />
+        <OTPModal 
+        show={showOTPModal} 
+        handleClose={handleCloseOTP}
+        formData={formData}
+        />
       )}
     </>
   );
