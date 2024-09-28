@@ -3,15 +3,18 @@ import { Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import UserAPIService from '../../../services/user_service';
 
-const MyModal = ({ show, handleClose,handleshow }) => {
-    const [formData, setFormData] = useState({
-        email: '',
-        username: '',
-        password: '',
-        confirmPassword: ''
-      });
-  const [error, setError] = useState(null);  
-  const [successMessage, setSuccessMessage] = useState(null); 
+
+const MyModal = ({ show, handleClose, handleOpenOTP }) => {
+  const [formData, setFormData] = useState({
+    email: '',
+    username: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
+
+  
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -40,18 +43,19 @@ const MyModal = ({ show, handleClose,handleshow }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError(null); 
-    setSuccessMessage(null); 
+    setError(null);
+    setSuccessMessage(null);
 
     if (!validation()) {
       return;
     }
-  
+
     try {
-        const response = await UserAPIService.generateOtp({ email: formData.email });
-        setSuccessMessage(response.data.message);
+      const response = await UserAPIService.generateOtp({ email: formData.email });
+      setSuccessMessage(response.data.message);
+      handleOpenOTP();
     } catch (error) {
-        setError(error.response.data.message);
+      setError(error.response.data.message);
     }
   };
 
@@ -62,10 +66,10 @@ const MyModal = ({ show, handleClose,handleshow }) => {
       </Modal.Header>
       <Modal.Body>
         <div>
-          
+
           <form onSubmit={handleSubmit}>
 
-          <div className="mb-3">
+            <div className="mb-3">
               <label htmlFor="username" className="form-label">
                 Username
               </label>
@@ -74,9 +78,9 @@ const MyModal = ({ show, handleClose,handleshow }) => {
                 name="username"
                 className="form-control"
                 placeholder="Enter username"
-                value={formData.username} 
-                onChange={handleOnChange} 
-                required 
+                value={formData.username}
+                onChange={handleOnChange}
+                required
               />
             </div>
             <div className="mb-3">
@@ -88,51 +92,52 @@ const MyModal = ({ show, handleClose,handleshow }) => {
                 name="email"
                 className="form-control"
                 placeholder="Enter email"
-                value={formData.email} 
-                onChange={handleOnChange} 
-                required 
+                value={formData.email}
+                onChange={handleOnChange}
+                required
               />
             </div>
             <div className="mb-3">
               <label htmlFor="password" className="form-label">
-              Password
+                Password
               </label>
               <input
                 type="text"
                 name="password"
                 className="form-control"
                 placeholder="Enter password"
-                value={formData.password} 
-                onChange={handleOnChange} 
-                required 
+                value={formData.password}
+                onChange={handleOnChange}
+                required
               />
             </div>
             <div className="mb-3">
               <label htmlFor="confirmPassword" className="form-label">
-             Confirm Password
+                Confirm Password
               </label>
               <input
                 type="text"
                 name="confirmPassword"
                 className="form-control"
                 placeholder="confirm password"
-                value={formData.confirmPassword} 
-                onChange={handleOnChange} 
-                required 
+                value={formData.confirmPassword}
+                onChange={handleOnChange}
+                required
               />
             </div>
 
 
-            {error && <p className="text-danger">{error}</p>} 
-          {successMessage && <p className="text-success">{successMessage}</p>} 
+            {error && <p className="text-danger">{error}</p>}
+            {successMessage && <p className="text-success">{successMessage}</p>}
 
-            <Button type="submit" className="btn btn-primary w-100"  onClick={handleshow}>
+            <Button type="submit" className="btn btn-primary w-100" >
               Sign up
             </Button>
           </form>
         </div>
       </Modal.Body>
     </Modal>
+   
   );
 };
 

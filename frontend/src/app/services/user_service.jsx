@@ -9,6 +9,11 @@ class UserAPIService {
         return response.data;
     }
 
+    static async signUpUser(data) {
+      const response = await axios.post(`${API_URL}/user/signup`, data)
+      return response.data;
+  }
+
   }
   
 export default UserAPIService;

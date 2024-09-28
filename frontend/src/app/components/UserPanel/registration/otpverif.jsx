@@ -3,6 +3,7 @@ import { Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export const OTPModal = ({ show, handleClose }) => {
+  
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
