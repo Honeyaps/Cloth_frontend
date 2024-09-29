@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import UserAPIService from '../../../services/user_service';
 
 
-const MyModal = ({ show, handleClose, handleOpenOTP, formData, onFormDataUpdate  }) => {
-  
+export const SignupModal = ({ show, handleClose, handleOpenOTP, openSigninModal, formData, onFormDataUpdate }) => {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   
@@ -51,67 +50,64 @@ const MyModal = ({ show, handleClose, handleOpenOTP, formData, onFormDataUpdate 
   };
 
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Sign Up</Modal.Title>
+    <Modal show={show} onHide={handleClose} className='modal'>
+      <Modal.Header closeButton className='border-0'>
+        <Modal.Title className='modal_heading mx-4'>Become an H&K member</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <form onSubmit={handleSubmit}>
+        <p className='text-center'>Become a member — don’t miss out on deals, offers, discounts and bonus vouchers.</p>
+        <form onSubmit={handleSubmit} className='px-3'>
           <div className="mb-3">
-            <label htmlFor="username" className="form-label">
-              Username
+            <label htmlFor="username" className="col-md-12">
+              Username <span className='text-danger'>*</span>
             </label>
             <input
               type="text"
               name="username"
-              className="form-control"
+              className="col-md-12"
               id="username"
-              placeholder="Enter username"
               value={formData.username}
               onChange={handleOnChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="email" className="form-label">
-              Email address
+            <label htmlFor="email" className="col-md-12">
+              Email address <span className='text-danger'>*</span>
             </label>
             <input
               type="email"
               name="email"
-              className="form-control"
+              className="col-md-12"
               id="email"
-              placeholder="Enter email"
               value={formData.email}
               onChange={handleOnChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="password" className="form-label">
-              Password
+            <label htmlFor="password" className="col-md-12">
+              Create a password <span className='text-danger'>*</span>
             </label>
             <input
               type="password" 
               name="password"
-              className="form-control"
+              className="col-md-12"
               id="password"
-              placeholder="Enter password"
               value={formData.password}
               onChange={handleOnChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="confirmPassword" className="form-label">
-              Confirm Password
+            <label htmlFor="confirmPassword" className="col-md-12">
+              Confirm Password <span className='text-danger'>*</span>
             </label>
             <input
               type="password"
               name="confirmPassword"
-              className="form-control"
+              className="col-md-12"
               id="confirmPassword"
-              placeholder="Confirm password"
               value={formData.confirmPassword}
               onChange={handleOnChange}
               required
@@ -121,13 +117,11 @@ const MyModal = ({ show, handleClose, handleOpenOTP, formData, onFormDataUpdate 
           {error && <p className="text-danger">{error}</p>}
           {successMessage && <p className="text-success">{successMessage}</p>}
 
-          <Button type="submit" className="btn btn-primary w-100">
-            Sign Up
-          </Button>
+          <button type='submit' className='form_btn w-100 mt-2'>Sign Up</button>
+          <p className='text-center mt-3'>Already have an account? <a href='#' onClick={openSigninModal}>Signin</a></p>
         </form>
       </Modal.Body>
     </Modal>
   );
 };
 
-export default MyModal;

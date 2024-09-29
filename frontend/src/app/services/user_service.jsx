@@ -12,7 +12,12 @@ class UserAPIService {
     static async signUpUser(data) {
       const response = await axios.post(`${API_URL}/user/signup`, data)
       return response.data;
-  }
+    }
+
+    static async signInUser(data) {
+      const response = await axios.post(`${API_URL}/user/signin`, data)
+      return response.data;
+    }
 
   }
   

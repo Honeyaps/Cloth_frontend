@@ -1,0 +1,39 @@
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: rgb(255, 251, 247);
+}
+
+p,label{
+    font-size: small;
+}
+
+label,.modal_heading{
+    font-weight: bold;
+}
+
+input{
+    font-size: medium;
+    height: 45px;
+    border: 1px solid grey;
+    padding-left: 10px;
+}
+
+a{
+    cursor: pointer;
+}
+
+.form_btn{
+    height: 45px;
+    background-color: rgb(50, 50, 50);
+    border: none;
+    color: white;
+    font-weight: bold;
+}
+
+.form_btn:hover{
+    background-color: rgb(0, 0, 0);
+}
+
+

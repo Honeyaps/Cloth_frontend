@@ -1,13 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Alert from 'react-bootstrap/Alert';
 import UserAPIService from '../../../services/user_service';
 
 export const OTPModal = ({ show, handleClose, formData }) => {
   const [otpValues, setOtpValues] = useState(Array(4).fill(""));
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
-  
   
   const inputRefs = useRef([]);
 
@@ -49,11 +49,14 @@ export const OTPModal = ({ show, handleClose, formData }) => {
 
   return (
     <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>OTP Verification</Modal.Title>
+      <Modal.Header closeButton className='border-0'>
+        <Modal.Title className='modal_heading'>OTP Verification</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div>
+          <Alert variant="success" className='text-center mb-3 py-2 px-3 text-center'>
+            We have sent a Verification code to your email - {formData.email}.
+          </Alert>
           <form onSubmit={handleSubmit}>
             <div className="mb-3 d-flex justify-content-center">
               {otpValues.map((value, index) => (
@@ -62,7 +65,7 @@ export const OTPModal = ({ show, handleClose, formData }) => {
                   ref={(el) => (inputRefs.current[index] = el)}
                   type="text"
                   maxLength="1"
-                  className="form-control mx-2 py-2"
+                  className="mx-2 py-2 px-3 text-center"
                   value={value}
                   onChange={(e) => handleChange(e, index)}
                   onKeyDown={(e) => handleKeyDown(e, index)} 
@@ -72,9 +75,9 @@ export const OTPModal = ({ show, handleClose, formData }) => {
             </div>
             {error && <p className="text-danger">{error}</p>}
             {successMessage && <p className="text-success">{successMessage}</p>}
-            <Button variant="primary" onClick={handleSubmit} className="btn btn-primary w-100">
+            <button onClick={handleSubmit} className="form_btn w-100 mt-2">
               Submit
-            </Button>
+            </button>
           </form>
         </div>
       </Modal.Body>
