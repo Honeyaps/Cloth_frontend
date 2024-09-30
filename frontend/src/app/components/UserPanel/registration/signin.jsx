@@ -24,8 +24,17 @@ export const SigninModal = ({  show, handleClose, openSignupModal }) => {
 
     try {
       const response = await UserAPIService.signInUser(formData);
+      
+      const token = response.data.token;
+      if (token) {
+        localStorage.setItem('token', token);
+      
       setSuccessMessage(response.data.message);
       handleClose();
+      }
+      else {
+        setError('Token not found in response');
+      }
     } catch (error) {
       setError(error.response.data.message);
     }
@@ -82,7 +91,7 @@ export const SigninModal = ({  show, handleClose, openSignupModal }) => {
             onClick={openSignupModal} 
             className='form_btn w-100 mt-2 bg-transparent text-black border border-black'
            >
-            Become a membor
+            Become a member
           </button>
         </form>
       </Modal.Body>

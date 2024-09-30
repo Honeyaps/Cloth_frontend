@@ -7,11 +7,11 @@ import UserAPIService from '../../../services/user_service';
 export const SignupModal = ({ show, handleClose, handleOpenOTP, openSigninModal, formData, onFormDataUpdate }) => {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
-  
+
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     const updatedFormData = { ...formData, [name]: value };
-    onFormDataUpdate(updatedFormData); 
+    onFormDataUpdate(updatedFormData);
   };
 
   const validation = () => {
@@ -42,8 +42,10 @@ export const SignupModal = ({ show, handleClose, handleOpenOTP, openSigninModal,
 
     try {
       const response = await UserAPIService.generateOtp({ email: formData.email });
-      setSuccessMessage(response.data.message);
-      handleOpenOTP();
+    
+        setSuccessMessage(response.data.message);
+        handleOpenOTP();
+    
     } catch (error) {
       setError(error.response.data.message);
     }
@@ -90,7 +92,7 @@ export const SignupModal = ({ show, handleClose, handleOpenOTP, openSigninModal,
               Create a password <span className='text-danger'>*</span>
             </label>
             <input
-              type="password" 
+              type="password"
               name="password"
               className="col-md-12"
               id="password"

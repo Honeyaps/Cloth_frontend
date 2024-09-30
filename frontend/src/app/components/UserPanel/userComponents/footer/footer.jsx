@@ -40,7 +40,7 @@ export const Footer = () => {
             <li><a href="#" className="text-dark text-decoration-none">Customer Service</a></li>
             <li><a href="#" className="text-dark text-decoration-none">My H&K</a></li>
             <li><a href="#" className="text-dark text-decoration-none">Find a store</a></li>
-            <li><a href="#" className="text-dark text-decoration-none">Legal & Privacy</a></li>
+            <li><a href="/adminsignin" className="text-dark text-decoration-none">Legal & Privacy</a></li>
             <li><a href="#" className="text-dark text-decoration-none">Contact</a></li>
             <li><a href="#" className="text-dark text-decoration-none">Report a scam</a></li>
             <li><a href="#" className="text-dark text-decoration-none">Cookie Settings</a></li>

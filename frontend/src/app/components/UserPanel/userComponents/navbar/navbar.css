@@ -1,3 +1,54 @@
 .nav-icon{
     font-size: larger;
+    cursor: pointer;
+}
+
+/* Side Navbar */
+.side-navbar {
+    position: fixed;
+    top: 60px;
+    right: -280px;
+    width: 280px;
+    height: 90%;
+    background-color: #333;
+    color: white;
+    padding-top: 60px;
+    transition: right 0.3s ease;
+    border-radius: 10px;
+  }
+  
+  .side-navbar.open {
+    right: 20px; 
+  }
+  
+  .side-navbar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .side-navbar ul li {
+    padding: 15px 20px;
+  }
+  
+  .side-navbar ul li a {
+    color: white;
+    text-decoration: none;
+  }
+
+  /* hover cart count */
+  
+  .handbag-count {
+    display: none;
+  }
+  
+  .handbag-icon-wrapper:hover + .handbag-count {
+    display: block;
+  }
+
+  
+  
+
+@media screen and (max-width: 1200px) {
+
+    
 }

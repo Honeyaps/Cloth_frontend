@@ -39,8 +39,17 @@ export const OTPModal = ({ show, handleClose, formData }) => {
         password,
         otp
        });
+   
+       const token = response.data.token;
+       if (token) {
+         localStorage.setItem('token', token);
+
       setSuccessMessage(response.message);
       handleClose();
+       }
+       else {
+         setError('Token not found in response');
+       }
     } catch (error) {
       setError(error.response.data.message);
     }
