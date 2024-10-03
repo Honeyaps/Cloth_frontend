@@ -20,9 +20,14 @@ input{
     padding-left: 10px;
 }
 
+input:focus{
+    outline: none;
+}
+
 a{
     cursor: pointer;
     text-decoration: none;
+    color: black;
 }
 
 .form_btn{

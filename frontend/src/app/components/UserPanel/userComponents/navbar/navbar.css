@@ -3,6 +3,10 @@
     cursor: pointer;
 }
 
+.search_bar_row{
+  margin-top: -80px; ;
+}
+
 /* Side Navbar */
 .side-navbar {
     position: fixed;
@@ -46,9 +50,20 @@
   }
 
   
-  
-
 @media screen and (max-width: 1200px) {
+  .fullscreen_view {
+    display: none;
+  }
+  .mobile_view {
+    display: block;
+  }
+}
 
-    
+@media screen and (min-width: 1201px) {
+  .mobile_view {
+    display: none;
+  }
+  .fullscreen_view {
+    display: block;
+  }
 }

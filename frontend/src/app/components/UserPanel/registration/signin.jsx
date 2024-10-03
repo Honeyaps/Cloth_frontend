@@ -77,7 +77,7 @@ export const SigninModal = ({  show, handleClose, openSignupModal }) => {
             />
           </div>
           <div className='mb-3 text-end'>
-            <a>Forgot password?</a>
+            <a href='/request-resetpassword'>Forgot password?</a>
           </div>
 
           {error && <p className="text-danger">{error}</p>}
