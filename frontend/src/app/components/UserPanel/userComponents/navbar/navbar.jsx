@@ -47,53 +47,61 @@ export const Navbar = () => {
   const handleCloseOTP = () => setShowOTPModal(false);
 
   return (
-    <>
+    <div>
 
+      {/* Desktop Navbar */}
       <div className="container fullscreen_view">
-        <div className="row mt-4" >
+        <div className="row mt-4">
           
           <div className="col-md-4">
-              <div className="justify-content-start">
-                <a href="#" className="me-3 text-dark">Customer Service</a>
-                <a href="#" className="me-3 text-dark">Newsletter</a>
-                <a href="#" className="me-3 text-dark">Find a store</a>
-          
+            <div className="justify-content-start">
+              <a href="/customer-service" className="me-3 text-dark">Customer Service</a>
+              <a href="/newin" className="me-3 text-dark">Newin</a>
+              <a href="/store-locator" className="me-3 text-dark">Find a store</a>
             </div>
           </div>
 
-         
           <div className="col-md-4 text-center">
             <div>
               <a href="/">
                 <img
                   src="/hk-logo.png"
                   alt="H&K Logo"
-                  style={{ width: "140px" , marginBottom: "50px"}}
+                  style={{ width: "140px", marginBottom: "50px" }}
                 />
               </a>
             </div>
           </div>
 
-          
           <div className="col-md-4">
             <div className="justify-content-end d-flex align-items-center">
-              <a href="#" className="me-3 text-dark" onClick={handleShowSignin}>
-              <CiUser  className="nav-icon"/> Sign in
+              <a className="me-3 text-dark" onClick={handleShowSignin}>
+                <CiUser className="nav-icon"/> Sign in
               </a>
-              <a href="#" className="me-3 text-dark">
-              <CiHeart  className="nav-icon"/> Favourites
+              <a href="/favourites" className="me-3 text-dark">
+                <CiHeart className="nav-icon"/> Favourites
               </a>
-              <a href="#" className="text-dark">
-              <IoBagCheckOutline className="nav-icon"/> Shopping bag
+              <a href="/shoppingbag" className="text-dark">
+                <IoBagCheckOutline className="nav-icon"/> Shopping bag
               </a>
             </div>
           </div>
         </div>
+
+        {/* Search Bar for Desktop */}
+        <div className="row search_bar_row">
+          <div className="col-12 d-flex justify-content-end">
+            <div className="d-flex align-items-center handbag-container">
+              <GoSearch className="nav-icon search-icon" />
+              <input type="text" placeholder="Search" className="search_bar" />
+            </div>
+          </div>
+        </div>
       </div>
-
-      {/* <div className="container-fluid mobile_view">
+      
+      {/* Mobile Navbar */}
+      <div className="container-fluid mobile_view">
         <div className="mt-4 justify-content-between d-flex">
-
           <div>
             <a href="/">
               <img
@@ -105,17 +113,11 @@ export const Navbar = () => {
           </div>
 
           <div className="d-flex">
-            <div className="me-4 d-flex align-items-center handbag-container">
-              <GoSearch className="nav-icon search-icon" />
-              <input type="text" placeholder="Search" className="search_bar" />
-            </div>
             <div className="me-4 d-block text-center handbag-container">
               <div className="handbag-icon-wrapper">
                 <BsHandbag className="nav-icon" />
               </div>
-              <div className="handbag-count">
-                0
-              </div>
+              <div className="handbag-count">0</div>
             </div>
             <div>
               {!isOpen ? (
@@ -125,21 +127,51 @@ export const Navbar = () => {
               )}
             </div>
           </div>
-
         </div>
 
-        
-        <div className={side-navbar ${isOpen ? 'open' : ''}}>
+        {/* Search Bar for Mobile */}
+        <div className="row search_bar_row  ">
+          <div className="col-12 d-flex justify-content-center">
+            <div className="d-flex align-items-center handbag-container">
+              <GoSearch className="nav-icon search-icon" />
+              <input type="text" placeholder="Search" className="search_bar" />
+            </div>
+          </div>
+        </div>
+
+        {/* Side Navbar for Mobile */}
+        <div className={`side-navbar ${isOpen ? 'open' : ''}`}>
           <ul>
-            <li><a href="" onClick={handleShowSignin}><CiUser className="nav-icon" /> Sign in</a></li>
-            <li><a href=""><RiCustomerService2Fill className="nav-icon" /> Customer Service</a></li>
-            <li><a href=""><IoNewspaperOutline className="nav-icon" /> Newsletter</a></li>
-            <li><a href=""><GrMap className="nav-icon" /> Find a store</a></li>
-            <li><a href=""><CiLogout className="nav-icon" /> Log out</a></li>
+            <li>
+              <a href="#" onClick={handleShowSignin}>
+                <CiUser className="nav-icon" /> Sign in
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <RiCustomerService2Fill className="nav-icon" /> Customer Service
+              </a>
+            </li>
+            <li>
+              <a href="/newin">
+                <IoNewspaperOutline className="nav-icon" /> Newin
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <GrMap className="nav-icon" /> Find a store
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <CiLogout className="nav-icon" /> Log out
+              </a>
+            </li>
           </ul>
         </div>
-      </div> */}
+      </div>
 
+      {/* Modals */}
       {showSigninModal && (
         <SigninModal
           show={showSigninModal}
@@ -172,6 +204,6 @@ export const Navbar = () => {
           formData={formData}
         />
       )}
-    </>
+    </div>
   );
-}
+};
