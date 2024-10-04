@@ -11,6 +11,7 @@ import { Customer } from './app/components/UserPanel/userComponents/customerServ
 import { FPEmail } from './app/components/UserPanel/registration/forgetPass/email';
 import { FPOtp } from './app/components/UserPanel/registration/forgetPass/otpPass';
 import { FPresetPass } from './app/components/UserPanel/registration/forgetPass/resetPass';
+import { AdminPortal } from './app/components/AdminPanel/adminComponent/adminPortal/adminPortal';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/request-resetpassword" element={<FPEmail/>} />
         <Route path="/request-resetpassword/otp" element={<FPOtp/>} />
         <Route path="/request-resetpassword/otp/reset-password" element={<FPresetPass/>} />
+        <Route path="/admin-portal" element={<AdminPortal/>} />
       </Routes>
     </Router>
   );

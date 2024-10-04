@@ -19,6 +19,21 @@ class UserAPIService {
       return response.data;
     }
 
+    static async FPemailVerify(data) {
+      const response = await axios.post(`${API_URL}/user/OTPforPass`, data)
+      return response.data;
+    }
+
+    static async FPverifyOtp(data) {
+      const response = await axios.post(`${API_URL}/user/verifyOtp`, data)
+      return response.data;
+    }
+
+    static async FPpassReset(data) {
+      const response = await axios.post(`${API_URL}/user/updatePass`, data)
+      return response.data;
+    }
+
   }
   
 export default UserAPIService;

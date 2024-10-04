@@ -1,0 +1,37 @@
+.admin-layout {
+    display: flex;
+    height: 100vh;
+    background-color: #ffffff;
+  }
+  
+  .sidebar {  
+    width: 220px;
+    background-color: #f5f5f5;
+    padding: 40px;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3); 
+    border-radius: 0 50px 50px 0;
+    z-index: 100; 
+    position: relative; /
+  }
+  
+  .sidebar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .sidebar ul li {
+    margin: 15px 0;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .content {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+  }
+  
+  h1 {
+    margin-bottom: 20px;
+  }
+  
