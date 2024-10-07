@@ -11,23 +11,31 @@ import { Customer } from './app/components/UserPanel/userComponents/customerServ
 import { FPEmail } from './app/components/UserPanel/registration/forgetPass/email';
 import { FPOtp } from './app/components/UserPanel/registration/forgetPass/otpPass';
 import { FPresetPass } from './app/components/UserPanel/registration/forgetPass/resetPass';
-import { AdminPortal } from './app/components/AdminPanel/adminComponent/adminPortal/adminPortal';
+import { AdminPortal } from './app/components/AdminPanel/adminComponent/adminPortal';
+import { CardView } from './app/components/UserPanel/userComponents/cards/cardView/cardView';
+import { Toaster } from 'sonner';
 
 function App() {
   return (
     <Router>
+      <Toaster
+        position="top-right"
+        className='mx-3'
+      />
+
       <Routes>
-        <Route path="/" element={<Main/>} />
-        <Route path="/adminsignin" element={<AdminSignin/>} />
-        <Route path="/shoppingbag" element={<ShoppingBag/>} />
-        <Route path="/favourites" element={<Favourites/>} />
-        <Route path="/newin" element={<Newin/>} />
-        <Route path="/store-locator" element={<FindStore/>} />
-        <Route path="/customer-service" element={<Customer/>} />
-        <Route path="/request-resetpassword" element={<FPEmail/>} />
-        <Route path="/request-resetpassword/otp" element={<FPOtp/>} />
-        <Route path="/request-resetpassword/otp/reset-password" element={<FPresetPass/>} />
-        <Route path="/admin-portal" element={<AdminPortal/>} />
+        <Route path="/" element={<Main />} />
+        <Route path="/adminsignin" element={<AdminSignin />} />
+        <Route path="/shoppingbag" element={<ShoppingBag />} />
+        <Route path="/favourites" element={<Favourites />} />
+        <Route path="/newin" element={<Newin />} />
+        <Route path="/store-locator" element={<FindStore />} />
+        <Route path="/customer-service" element={<Customer />} />
+        <Route path="/request-resetpassword" element={<FPEmail />} />
+        <Route path="/request-resetpassword/otp" element={<FPOtp />} />
+        <Route path="/request-resetpassword/otp/reset-password" element={<FPresetPass />} />
+        <Route path="/admin-portal" element={<AdminPortal />} />
+        <Route path="/product-view" element={<CardView />} />
       </Routes>
     </Router>
   );

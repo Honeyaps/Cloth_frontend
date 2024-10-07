@@ -13,13 +13,14 @@ label,.modal_heading{
     font-weight: bold;
 }
 
-input{
+input,textarea{
     font-size: medium;
     height: 45px;
     border: 1px solid grey;
     padding-left: 10px;
 }
 
+textarea:focus,
 input:focus{
     outline: none;
 }
@@ -53,3 +54,80 @@ a{
     border-bottom: 1px solid grey;
     outline: none;
 }
+
+
+
+/* .modal{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 80vh;
+} */
+
+
+/* admin portal */
+.admin-layout {
+    display: flex;
+    height: 100vh;
+    background-color: #ffffff;
+  }
+  
+  .logo {
+    margin: 20px 0 0 -20px;
+  }
+  
+  .sidebar {
+    width: 230px;
+    box-shadow: 7px 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    position: relative;
+  }
+  
+  .sidebar ul li {
+    margin: 15px 0;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 7px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+    transition: 0.1s ease-in-out;
+  }
+  
+  .sidebar ul li:hover {
+    background-color: #333333;
+    color: #ffffff;
+  }
+  
+  .sidebar ul li.active {
+    background-color: #333333;
+    color: #ffffff;
+  }
+  
+  .content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .back_navigation {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    height: 60px;
+  }
+  
+  
+  .back_navigation p {
+    margin: 0;
+  }
+  
+  .content {
+    flex: 1;
+    padding: 5px;
+    background-color: #eeeeee;
+    overflow: auto;
+  }
+  
+  h1 {
+    margin-bottom: 20px;
+  }
