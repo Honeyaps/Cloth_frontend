@@ -1,7 +1,7 @@
 // LoadingButton.js
 import React from 'react';
 import PropTypes from 'prop-types';
-import './common_service.css';
+import './helper.css';
 import Swal from 'sweetalert2';
 
 export const DeleteConfirmationAlert = ({ title, text, onConfirm, onCancel }) => {

@@ -4,7 +4,7 @@ import { AddProduct } from './addProduct/addproduct';
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { GrEdit } from "react-icons/gr";
-import { DeleteConfirmationAlert } from '../../../../shared/common/common_service'; 
+import { DeleteConfirmationAlert } from '../../../../shared/helpers/helper'; 
 
 export const Products = () => {
   const [isAddingProduct, setIsAddingProduct] = useState(false);

@@ -3,7 +3,7 @@ import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import UserAPIService from '../../../services/user_service';
 import { toast } from 'sonner'; 
-import { LoadingButton } from '../../../shared/common/common_service';
+import { LoadingButton } from '../../../shared/helpers/helper';
 
 export const SigninModal = ({ show, handleClose, openSignupModal }) => {
   const [formData, setFormData] = useState({
