@@ -15,6 +15,11 @@ class AdminAPIService {
       return response.data;
     }
 
+    static async updateProduct(data) {
+      const response = await axios.post(`${API_URL}/admin/updateProduct`, data, { headers })
+      return response.data;
+    }
+
     static async deleteProduct(data) {
       const response = await axios.post(`${API_URL}/admin/deleteProduct`, data, { headers })
       return response.data;

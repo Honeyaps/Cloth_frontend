@@ -33,8 +33,12 @@ export const Products = ({ setActiveComponent }) => {
     fetchProducts();
   }, [page]); // Fetch products on page change
 
-  const handleAddProductClick = () => {
-    setActiveComponent('AddProduct');
+  const handleAddProductClick = (productId) => {
+    setActiveComponent('AddProduct', productId);
+  };
+
+  const handleEditProduct = (productId) => {
+    setActiveComponent('EditProduct', productId);
   };
 
   const handleDelete = (productId, productName) => {
@@ -155,7 +159,7 @@ export const Products = ({ setActiveComponent }) => {
                           <td>${product.price}</td>
                           <td>{product.quantity}</td>
                           <td>
-                            <button className="bg-transparent border-0">
+                            <button className="bg-transparent border-0" onClick={() => handleEditProduct  (product._id)}>
                               <GrEdit className='nav-icon' />
                             </button>
                             <button
