@@ -4,7 +4,7 @@ export const Settings = () => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-md-12 card shadow p-3">
+        <div className="col-md-12 card rounded-0 shadow p-3">
           <h3 className="dashboard-title">Settings</h3>
         </div>
       </div>

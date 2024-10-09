@@ -3,8 +3,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './helper.css';
 import Swal from 'sweetalert2';
+import { Spinner } from 'react-bootstrap';
 
-export const DeleteConfirmationAlert = ({ title, text, onConfirm, onCancel }) => {
+export const DeleteConfirmationAlert = ({ text, onConfirm }) => {
     Swal.fire({
       title: 'Are you sure?',
       text,
@@ -29,7 +30,7 @@ export const DeleteConfirmationAlert = ({ title, text, onConfirm, onCancel }) =>
         text: message || 'Product added successfully!',
         icon: 'success',
         confirmButtonText: 'OK',
-        confirmButtonColor: '#3085d6',
+        confirmButtonColor: '#333333',
       });
   };
 
@@ -61,4 +62,14 @@ LoadingButton.propTypes = {
 LoadingButton.defaultProps = {
     disabled: false,
     className: '',
+};
+
+export const LoadingSpinner = () => {
+  return (
+    <div className="spinner-container">
+      <Spinner animation="border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </Spinner>
+    </div>
+  );
 };

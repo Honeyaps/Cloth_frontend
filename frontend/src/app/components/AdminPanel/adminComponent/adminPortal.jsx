@@ -10,6 +10,7 @@ import "./adminPortal.css";
 import { Dashboard } from "./dashboard/dashboard";
 import { Products } from "./products/product";
 import { Settings } from "./settings/settings";
+import { AddProduct } from "./products/addProduct/addproduct";
 
 export const AdminPortal = () => {
   const navigate = useNavigate();
@@ -32,7 +33,9 @@ export const AdminPortal = () => {
       case "Dashboard":
         return <Dashboard />;
       case "Products":
-        return <Products />;
+        return <Products setActiveComponent={setActiveComponent} />;
+      case "AddProduct": 
+      return <AddProduct setActiveComponent={setActiveComponent} />;
       case "Settings":
         return <Settings />;
       default:

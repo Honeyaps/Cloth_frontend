@@ -1,125 +1,232 @@
-import React from 'react';
-import CountUp from 'react-countup'; // Import CountUp
-import './dashboard.css'; // Optional for additional styling
+import React, { useEffect, useState } from 'react';
+import CountUp from 'react-countup';
+import './dashboard.css';
+import moment from 'moment';
+import { LoadingSpinner } from '../../../../shared/helpers/helper';
+import AdminAPIService from '../../../../services/admin_service';
+import { toast } from 'sonner';
+import { Alert } from 'react-bootstrap';
+import { CiSearch } from 'react-icons/ci';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
+import { HiOutlineRefresh } from "react-icons/hi";
 
 export const Dashboard = () => {
-  // Mocked data. Replace these values with data fetched from your backend.
-  const totalUsers = 12;
-  const totalOrders = 45;
-  const averageOrderQuantity = 8;
-  const totalRevenue = 1245.00;
-  const totalProductsSold = 1200;
+  const [dashboardData, setDashboardData] = useState();
+  const [loading, setLoading] = useState(true);
+  const [dateRange, setDateRange] = useState([moment().subtract(30, 'days').toDate(), moment().toDate()]);
+  const [startDate, endDate] = dateRange;
+
+  useEffect(() => {
+    fetchDashboardData(dateRange); // Fetch initial dashboard data for the last 30 days
+  }, []);
+
+  const fetchDashboardData = async (range) => {
+    setLoading(true);
+
+    const payload = {
+      start_date_time: moment(range[0]).format('YYYY-MM-DD'),
+      end_date_time: moment(range[1]).format('YYYY-MM-DD'),
+    };
+
+    try {
+      const response = await AdminAPIService.getdashboardata(payload);
+      setDashboardData(response.data);
+    } catch (err) {
+      console.error('Error fetching dashboard data:', err);
+      toast.error('Error fetching dashboard data. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const refreshDashboard = () => {
+    const newDateRange = [moment().subtract(30, 'days').toDate(), moment().toDate()];
+    setDateRange(newDateRange);
+    fetchDashboardData(newDateRange); // Pass the new date range to fetch data
+  };
+
+  const handleSearch = () => {
+    fetchDashboardData(dateRange); // Pass the current date range to fetch data
+  };
+
+  const mergeCategoryData = () => {
+    const revenueByCategory = dashboardData?.revenueByCategory || [];
+    const soldOutcategories = dashboardData?.soldOutcategories || [];
+    const totalcategorieProducts = dashboardData?.totalcategorieProducts || [];
+
+    // Create a map for each array by category name (_id)
+    const revenueMap = revenueByCategory.reduce((acc, item) => {
+      acc[item._id] = { totalRevenue: item.totalRevenue };
+      return acc;
+    }, {});
+
+    const soldOutMap = soldOutcategories.reduce((acc, item) => {
+      acc[item._id] = { soldOut: item.total };
+      return acc;
+    }, {});
+
+    const totalProductsMap = totalcategorieProducts.reduce((acc, item) => {
+      acc[item._id] = { totalProducts: item.count };
+      return acc;
+    }, {});
+
+    // Merge all data by category (_id)
+    const allCategories = new Set([
+      ...revenueByCategory.map(item => item._id),
+      ...soldOutcategories.map(item => item._id),
+      ...totalcategorieProducts.map(item => item._id)
+    ]);
+
+    const mergedData = Array.from(allCategories).map(category => ({
+      category,
+      totalRevenue: revenueMap[category]?.totalRevenue || 0,
+      soldOut: soldOutMap[category]?.soldOut || 0,
+      totalProducts: totalProductsMap[category]?.totalProducts || 0
+    }));
+
+    return mergedData;
+  };
+
+  const mergedCategoryData = mergeCategoryData();
 
   return (
     <div className="container-fluid">
       {/* Row for the Dashboard title */}
       <div className="row">
-        <div className="col-md-12 card shadow p-3">
-          <h3 className="dashboard-title">Dashboard</h3>
+        <div className="col-md-12 bg-white shadow p-3 d-flex justify-content-between">
+          <div className="d-flex">
+            <h3 className="dashboard-title">Dashboard</h3>
+          </div>
+          <div className='d-flex'>
+            <DatePicker
+              selected={startDate}
+              onChange={(update) => setDateRange(update)}
+              selectsRange
+              startDate={startDate}
+              endDate={endDate}
+              dateFormat="yyyy-MM-dd"
+              className="mx-2"
+              placeholderText="Select Date Range"
+              withPortal
+            />
+            <button className='form_btn mx-2 px-2' onClick={handleSearch}>
+              <CiSearch className='nav-icon fs-3' />
+            </button>
+            <button className='mx-2 px-2 refresh' onClick={refreshDashboard}>
+              <HiOutlineRefresh className='nav-icon fs-3' />
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Row for dashboard cards */}
-      <div className="row mt-2">
-        {/* Card 1 */}
-        <div className="col-md-3">
-          <div className="card shadow">
-            <div className="card-body">
-              <p className="card-title">Total Users</p>
-              <h5 className="card-text">
-                <CountUp start={0} end={totalUsers} duration={3} easing="easeOutQuint" />
-              </h5>
-            </div>
-          </div>
+      {loading ? (
+        <div className="spinner-container">
+          <LoadingSpinner />
         </div>
+      ) : (
+        <>
+          <div className="row mt-2">
+            <div className="col-md-3">
+              <div className="card shadow">
+                <div className="card-body">
+                  <p className="card-title">Total Users</p>
+                  <h5 className="card-text">
+                    <CountUp start={0} end={dashboardData?.totalUsers || 0} duration={3} easing="easeOutQuint" />
+                  </h5>
+                </div>
+              </div>
+            </div>
 
-        {/* Card 2 */}
-        <div className="col-md-3">
-          <div className="card shadow">
-            <div className="card-body">
-              <p className="card-title">Total Orders</p>
-              <h5 className="card-text">
-                <CountUp start={0} end={totalOrders} duration={3} easing="easeOutQuint" />
-              </h5>
+            <div className="col-md-3">
+              <div className="card shadow">
+                <div className="card-body">
+                  <p className="card-title">Total Orders</p>
+                  <h5 className="card-text">
+                    <CountUp start={0} end={dashboardData?.totalOrders || 0} duration={3} easing="easeOutQuint" />
+                  </h5>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-3">
+              <div className="card shadow">
+                <div className="card-body">
+                  <p className="card-title">Average Order Quantity</p>
+                  <h5 className="card-text">
+                    <CountUp start={0} end={dashboardData?.averageOrderQuantity || 0} duration={3} easing="easeOutQuint" />
+                  </h5>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-3">
+              <div className="card shadow">
+                <div className="card-body">
+                  <p className="card-title">Total Revenue</p>
+                  <h5 className="card-text">
+                    <CountUp start={0} end={dashboardData?.totalRevenue || 0} duration={3} easing="easeOutQuint" prefix="$" />
+                  </h5>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Card 3 */}
-        <div className="col-md-3">
-          <div className="card shadow">
-            <div className="card-body">
-              <p className="card-title">Average Order Quantity</p>
-              <h5 className="card-text">
-                <CountUp start={0} end={averageOrderQuantity} duration={3} easing="easeOutQuint" />
-              </h5>
+          <div className="row mt-2">
+            <div className="col-md-3">
+              <div className="card shadow">
+                <div className="card-body">
+                  <p className="card-title">Total Products Sold</p>
+                  <h5 className="card-text">
+                    <CountUp start={0} end={dashboardData?.totalProductsSold || 0} duration={3} easing="easeOutQuint" separator="," />
+                  </h5>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Card 4 */}
-        <div className="col-md-3">
-          <div className="card shadow">
-            <div className="card-body">
-              <p className="card-title">Total Revenue</p>
-              <h5 className="card-text">
-                <CountUp start={0} end={totalRevenue} duration={3} easing="easeOutQuint" prefix="$" />
-              </h5>
+          <div className="row mt-2">
+            {/* Table for Category Data */}
+            <div className="col-md-6">
+              <div className="card shadow">
+                <div className="card-body" style={{ height: 'auto' }}>
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Category</th>
+                        <th scope="col">Total Revenue</th>
+                        <th scope="col">Sold Out Products</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {mergedCategoryData.map((categoryData, index) => (
+                        <tr key={index}>
+                          <td>{categoryData.category}</td>
+                          <td>{categoryData.totalRevenue}</td>
+                          <td>{categoryData.soldOut}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            {/* System alert */}
+            <div className="col-md-6">
+              <div className="card shadow">
+                <div className="card-header">
+                  <h5 className="card-title">System Alert</h5>
+                </div>
+                <div className="card-body">
+                  <Alert variant="info">No System Alert</Alert>
+                </div>
+              </div>
             </div>
           </div>
-        </div> 
-      </div>
-
-      <div className="row mt-2">
-        {/* Card 1 */}
-        <div className="col-md-3">
-          <div className="card shadow">
-            <div className="card-body">
-              <p className="card-title">Total Products Sold</p>
-              <h5 className="card-text">
-                <CountUp start={0} end={totalProductsSold} duration={3} easing="easeOutQuint" useEasing={true} separator=","  />
-              </h5>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Row for additional dashboard content */}
-      <div className="row mt-2">
-        {/* Recent Activities */}
-        <div className="col-md-6">
-          <div className="card shadow">
-            <div className="card-body">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Product Name</th>
-                    <th scope="col">Sold Count</th> 
-                    <th scope="col">Revenue</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Product 1</td>
-                    <td>10</td>
-                    <td>$100.00</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        {/* System Alerts */}
-        <div className="col-md-6">
-          <div className="card shadow">
-            <div className="card-body">
-              <h5 className="card-title">System Alerts</h5>
-              <p className="card-text">No critical alerts at the moment.</p>
-            </div>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };
