@@ -42,10 +42,10 @@ export const SignupModal = ({ show, handleClose, handleOpenOTP, openSigninModal,
 
     try {
       const response = await UserAPIService.generateOtp({ email: formData.email });
-    
-        setSuccessMessage(response.data.message);
-        handleOpenOTP();
-    
+      const token = response.data.token;
+      localStorage.setItem('token', token);
+      setSuccessMessage(response.data.message);
+      handleOpenOTP();
     } catch (error) {
       setError(error.response.data.message);
     }

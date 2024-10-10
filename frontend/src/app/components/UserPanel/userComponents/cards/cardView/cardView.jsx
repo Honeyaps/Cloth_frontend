@@ -8,8 +8,16 @@ import { CiTimer } from "react-icons/ci";
 import "./cardView.css";
 import { Footer } from "../../footer/footer";
 import { CiDeliveryTruck } from "react-icons/ci";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import UserAPIService from "../../../../../services/user_service";
 
 export const CardView = () => {
+  const { productId } = useParams(); 
+  const [product, setProduct] = useState(null); 
+
+  console.log(productId);
+
   const settings = {
     vertical: true,
     slidesToShow: 1,
@@ -42,47 +50,53 @@ export const CardView = () => {
     ],
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await UserAPIService.getProducts({productId});
+        setProduct(response.data.product[0]);
+        console.log(response.data.product[0]);
+      } catch (error) {
+        console.error(error);
+      }
+      
+    }
+    
+    fetchData();
+  }, [ productId ]);
+  
+
+
+  
+
   return (
     <>
       <Navbar />
       <div className="container-fluid mt-4">
         <div className="row">
           <div className="col-md-7 product_imgs">
-            <Slider {...settings}>
-              <div>
-                <img
-                  src="/main_pics/child.avif"
-                  alt=""
-                  className="cardView_imgs"
-                />
-              </div>
-              <div>
-                <img
-                  src="/main_pics/child.avif"
-                  alt=""
-                  className="cardView_imgs"
-                />
-              </div>
-
-              <div>
-                <img
-                  src="/main_pics/child.avif"
-                  alt=""
-                  className="cardView_imgs"
-                />
-              </div>
+          <Slider {...settings}>
+              {product?.images.map((image, index) => (
+                <div key={index}>
+                  <img
+                    src={image}
+                    alt={`Product image ${index + 1}`} 
+                    className="cardView_imgs"
+                  />
+                </div>
+              ))}
             </Slider>
           </div>
 
           <div className="col-md-5 about_product">
             <div>
-              <h1>Name of the product</h1>
-              <h6 className="price">RS 450,00</h6>
+              <h1>{product?.productName}</h1>
+              <h6 className="price">RS. {product?.price}.00</h6>
               <img
-                src="/main_pics/child.avif"
+                src={product?.card_pic}
                 alt=""
                 className="img-fluid border border-dark my-3"
-                style={{ width: "10%" }}
+                style={{ width: "13%" }}
               />
               <h6>SIZES</h6>
               <div className="row d-flex gap-2 my-3 mx-1">
@@ -113,13 +127,7 @@ export const CardView = () => {
               </div>
               <h6 className="mt-3">DESCRIPTION</h6>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-                reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
+                {product?.description}
               </p>
               <button className="bg-transparent form_btn text-black border border-black w-100">
                 BUY NOW

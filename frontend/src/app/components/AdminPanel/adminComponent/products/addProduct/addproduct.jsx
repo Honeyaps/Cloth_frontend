@@ -186,7 +186,7 @@ export const AddProduct = ({ setActiveComponent}) => {
                             onClick={handleAddProduct}
                             className='form_btn mt-2 px-5 rounded-0'
                         >
-                            Sign in
+                            Save
                         </LoadingButton>
                     </form>
                 </div>

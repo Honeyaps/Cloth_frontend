@@ -2,6 +2,8 @@ import axios from 'axios';
 import { env } from '../../environments/env';
 
 const API_URL = env.API_URL
+const token = localStorage.getItem('token');
+const headers = { Authorization: `Bearer ${token}` };
 
 class UserAPIService {
     static async generateOtp(data) {
@@ -36,6 +38,11 @@ class UserAPIService {
 
     static async getProducts(data) {
       const response = await axios.post(`${API_URL}/user/getProducts`, data)
+      return response.data;
+    }
+
+    static async getCartItems(data) {
+      const response = await axios.post(`${API_URL}/user/getCartItems`, data)
       return response.data;
     }
 

@@ -195,8 +195,8 @@ export const Dashboard = () => {
                     <thead>
                       <tr>
                         <th scope="col">Category</th>
-                        <th scope="col">Total Revenue</th>
-                        <th scope="col">Sold Out Products</th>
+                        <th scope="col">Revenue</th>
+                        <th scope="col">Sold Out</th>
                       </tr>
                     </thead>
                     <tbody>

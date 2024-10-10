@@ -34,9 +34,8 @@ export const AdminPortal = () => {
   const handleNavigation = (component, id) => {
     setActiveComponent(component);
 
-    // Store the product ID if available
     if (component === 'EditProduct' && id) {
-        setProductId(id); // Assuming you have defined productId state
+        setProductId(id); 
     }
 
     switch (component) {
@@ -60,7 +59,6 @@ export const AdminPortal = () => {
     }
 };
 
-// Back button logic
 const handleBack = () => {
   if (activeComponent === "AddProduct" || activeComponent === "EditProduct") {
     handleNavigation("Products"); 
@@ -82,7 +80,7 @@ const renderComponent = () => {
         case "AddProduct":
             return <AddProduct setActiveComponent={handleNavigation} />;
         case "EditProduct":
-            return <EditProduct setActiveComponent={handleNavigation} productId={productId} />; // Pass the productId
+            return <EditProduct setActiveComponent={handleNavigation} productId={productId} />;
         case "Settings":
             return <Settings />;
         default:
@@ -135,7 +133,7 @@ return (
           </button>
           <span style={{ fontSize: "23px" }}>|</span>
           <span className="mx-2" style={{ fontSize: "16px" }}>
-            {breadcrumb} {/* Display the breadcrumb */}
+            {breadcrumb} 
           </span>
         </div>
 

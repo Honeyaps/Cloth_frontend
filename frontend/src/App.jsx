@@ -35,7 +35,7 @@ function App() {
         <Route path="/request-resetpassword/otp" element={<FPOtp />} />
         <Route path="/request-resetpassword/otp/reset-password" element={<FPresetPass />} />
         <Route path="/admin-portal" element={<AdminPortal />} />
-        <Route path="/product-view" element={<CardView />} />
+        <Route path="/product-view/:productId" element={<CardView />} />
       </Routes>
     </Router>
   );

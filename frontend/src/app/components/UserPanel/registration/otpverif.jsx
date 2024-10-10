@@ -3,6 +3,7 @@ import { Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Alert from 'react-bootstrap/Alert';
 import UserAPIService from '../../../services/user_service';
+import { toast } from 'sonner';
 
 export const OTPModal = ({ show, handleClose, formData }) => {
   const [otpValues, setOtpValues] = useState(Array(4).fill(""));
@@ -39,17 +40,13 @@ export const OTPModal = ({ show, handleClose, formData }) => {
         password,
         otp
        });
-   
-       const token = response.data.token;
-       if (token) {
-         localStorage.setItem('token', token);
-
-      setSuccessMessage(response.message);
+      const token = response.data.token;
+      const userId = response.data.user._id;
+      localStorage.setItem('token', token);
+      localStorage.setItem('userId', userId);
+      
+      toast.success('Signup successful');
       handleClose();
-       }
-       else {
-         setError('Token not found in response');
-       }
     } catch (error) {
       setError(error.response.data.message);
     }

@@ -24,10 +24,12 @@ export const SigninModal = ({ show, handleClose, openSignupModal }) => {
     try {
       const response = await UserAPIService.signInUser(formData);
       const token = response.data.token;
+      const userId = response.data.user._id;
       localStorage.setItem('token', token);
+      localStorage.setItem('userId', userId);
 
       toast.success(response.data.message || 'Sign in successful');
-      handleClose(); // Close modal after successful sign-in
+      handleClose();
     } catch (error) {
       toast.error(error.response?.data?.message || 'Error occurred while signing in');
     } finally {
