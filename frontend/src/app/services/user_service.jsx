@@ -2,8 +2,6 @@ import axios from 'axios';
 import { env } from '../../environments/env';
 
 const API_URL = env.API_URL
-const token = localStorage.getItem('token');
-const headers = { Authorization: `Bearer ${token}` };
 
 class UserAPIService {
     static async generateOtp(data) {

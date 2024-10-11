@@ -16,6 +16,11 @@ import { ViewProduct } from "./products/viewProduct/viewProduct";
 
 export const AdminPortal = () => {
   const navigate = useNavigate();
+  const [isHoveredLogout, setIsHoveredLogout] = useState(false);
+  const [activeComponent, setActiveComponent] = useState("Dashboard");
+  const [breadcrumb, setBreadcrumb] = useState("Dashboard");
+  const [productId, setProductId] = useState(null);
+
   useEffect(() => {
     if (!localStorage.getItem('admintoken')) {
       navigate('/adminsignin');
@@ -26,11 +31,6 @@ export const AdminPortal = () => {
     localStorage.removeItem("admintoken");
     navigate("/");
   };
-
-  const [isHoveredLogout, setIsHoveredLogout] = useState(false);
-  const [activeComponent, setActiveComponent] = useState("Dashboard");
-  const [breadcrumb, setBreadcrumb] = useState("Dashboard");
-  const [productId, setProductId] = useState(null);
 
   const handleNavigation = (component, id) => {
     setActiveComponent(component);
@@ -65,9 +65,7 @@ export const AdminPortal = () => {
 
 const handleBack = () => {
   if (activeComponent === "AddProduct" || activeComponent === "EditProduct" || activeComponent === "ViewProduct") {
-    handleNavigation("Products"); 
-  } else if (activeComponent === "Products") {
-    handleNavigation("Dashboard"); 
+    handleNavigation("Products");
   } else {
     handleNavigation("Dashboard"); 
   }

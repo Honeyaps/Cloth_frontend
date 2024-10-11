@@ -12,14 +12,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import { HiOutlineRefresh } from "react-icons/hi";
 
 export const Dashboard = () => {
-  const [dashboardData, setDashboardData] = useState();
+  const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState([moment().subtract(30, 'days').toDate(), moment().toDate()]);
   const [startDate, endDate] = dateRange;
 
   useEffect(() => {
-    fetchDashboardData(dateRange); // Fetch initial dashboard data for the last 30 days
-  }, []);
+    fetchDashboardData(dateRange); 
+  }, [ dateRange ]);
 
   const fetchDashboardData = async (range) => {
     setLoading(true);
@@ -43,11 +43,11 @@ export const Dashboard = () => {
   const refreshDashboard = () => {
     const newDateRange = [moment().subtract(30, 'days').toDate(), moment().toDate()];
     setDateRange(newDateRange);
-    fetchDashboardData(newDateRange); // Pass the new date range to fetch data
+    fetchDashboardData(newDateRange); 
   };
 
   const handleSearch = () => {
-    fetchDashboardData(dateRange); // Pass the current date range to fetch data
+    fetchDashboardData(dateRange); 
   };
 
   const mergeCategoryData = () => {
