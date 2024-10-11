@@ -17,7 +17,6 @@ class AdminAPIService {
 
     static async updateProduct(data) {
       const response = await axios.post(`${API_URL}/admin/updateProduct`, data, { headers })
-      console.log("api call",response.data)
       return response.data;
     }
 

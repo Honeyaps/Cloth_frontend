@@ -12,6 +12,7 @@ import { Products } from "./products/product";
 import { Settings } from "./settings/settings";
 import { AddProduct } from "./products/addProduct/addproduct";
 import { EditProduct } from "./products/editProduct/editProduct";
+import { ViewProduct } from "./products/viewProduct/viewProduct";
 
 export const AdminPortal = () => {
   const navigate = useNavigate();
@@ -34,9 +35,9 @@ export const AdminPortal = () => {
   const handleNavigation = (component, id) => {
     setActiveComponent(component);
 
-    if (component === 'EditProduct' && id) {
-        setProductId(id); 
-    }
+    if ((component === 'EditProduct' || component === 'ViewProduct') && id) {
+        setProductId(id);  
+      }
 
     switch (component) {
         case "Dashboard":
@@ -51,6 +52,9 @@ export const AdminPortal = () => {
         case "EditProduct":
             setBreadcrumb("Product > EditProduct");
             break;
+        case "ViewProduct":
+            setBreadcrumb("Product > ViewProduct");
+            break;
         case "Settings":
             setBreadcrumb("Settings");
             break;
@@ -60,7 +64,7 @@ export const AdminPortal = () => {
 };
 
 const handleBack = () => {
-  if (activeComponent === "AddProduct" || activeComponent === "EditProduct") {
+  if (activeComponent === "AddProduct" || activeComponent === "EditProduct" || activeComponent === "ViewProduct") {
     handleNavigation("Products"); 
   } else if (activeComponent === "Products") {
     handleNavigation("Dashboard"); 
@@ -81,6 +85,8 @@ const renderComponent = () => {
             return <AddProduct setActiveComponent={handleNavigation} />;
         case "EditProduct":
             return <EditProduct setActiveComponent={handleNavigation} productId={productId} />;
+        case "ViewProduct":
+            return <ViewProduct setActiveComponent={handleNavigation} productId={productId}/>;
         case "Settings":
             return <Settings />;
         default:

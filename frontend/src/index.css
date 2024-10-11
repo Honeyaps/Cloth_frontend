@@ -13,7 +13,9 @@ label,.modal_heading{
     font-weight: bold;
 }
 
-input,textarea{
+input,
+textarea,
+select{
     font-size: medium;
     height: 45px;
     border: 1px solid grey;
@@ -21,6 +23,7 @@ input,textarea{
 }
 
 textarea:focus,
+select:focus,
 input:focus{
     outline: none;
 }

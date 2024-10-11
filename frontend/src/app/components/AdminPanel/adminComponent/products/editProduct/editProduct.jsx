@@ -3,7 +3,7 @@ import UserAPIService from "../../../../../services/user_service";
 import AdminAPIService from "../../../../../services/admin_service";
 import { useEffect, useState } from "react";
 import { toast } from 'sonner';
-import { AddConfirmationAlert, LoadingSpinner } from "../../../../../shared/helpers/helper";
+import { AddConfirmationAlert, CustomMultiSelect, LoadingSpinner } from "../../../../../shared/helpers/helper";
 
 export const EditProduct = ({ productId, setActiveComponent }) => {
   const [productDetails, setProductDetails] = useState({
@@ -11,20 +11,30 @@ export const EditProduct = ({ productId, setActiveComponent }) => {
     description: '',
     price: 0,
     category: '',
-    quantity: 0,
+    size: [],
     images: [],
   });
   const [card_pic, setCardPic] = useState(null);
   const [images, setImages] = useState(Array(4).fill(null)); 
   const [loading, setLoading] = useState(true);
+  const [selectedSizes, setSelectedSizes] = useState([]);
+
 
   useEffect(() => {
-    console.log("Running useEffect with productId:", productId);
     const fetchProductDetails = async () => {
       try {
         const response = await UserAPIService.getProducts({ productId });
         if (response && response.data && response.data.product.length > 0) {
-          setProductDetails(response.data.product[0]);
+          const product = response.data.product[0];
+          console.log("Product:",product);
+
+          setProductDetails(product);
+
+          const sizesArray = product.size.map(size => ({
+            value: size,
+            label: size
+          }));
+          setSelectedSizes(sizesArray); 
         } else {
           toast.error('Product not found.');
         }
@@ -45,7 +55,6 @@ export const EditProduct = ({ productId, setActiveComponent }) => {
       ...prevDetails,
       [name]: value,
     }));
-    console.log("handleInputChange",name, value)
   };
 
   const handleFileChange = (e, setter) => {
@@ -72,7 +81,7 @@ export const EditProduct = ({ productId, setActiveComponent }) => {
     formData.append("description", productDetails.description);
     formData.append("price", productDetails.price);
     formData.append("category", productDetails.category);
-    formData.append("quantity", productDetails.quantity);
+    formData.append("size", selectedSizes.map(option => option.value));
     formData.append("id", productId);
   
     // Append the images if any
@@ -176,16 +185,12 @@ export const EditProduct = ({ productId, setActiveComponent }) => {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="quantity" className="col-md-12 text-start">
-                  Quantity <span className="text-danger">*</span>
+                <label className="col-md-12 text-start">
+                  Size <span className="text-danger">*</span>
                 </label>
-                <input
-                  type="number"
-                  className="col-md-12"
-                  id="quantity"
-                  name="quantity"
-                  value={productDetails.quantity}
-                  onChange={handleInputChange}
+                <CustomMultiSelect
+                  value={selectedSizes} 
+                  onChange={setSelectedSizes}
                   required
                 />
               </div>

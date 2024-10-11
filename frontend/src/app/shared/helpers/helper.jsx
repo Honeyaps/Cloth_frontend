@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import './helper.css';
 import Swal from 'sweetalert2';
 import { Spinner } from 'react-bootstrap';
+import Select from 'react-select';
 
 export const DeleteConfirmationAlert = ({ text, onConfirm }) => {
     Swal.fire({
@@ -73,3 +74,59 @@ export const LoadingSpinner = () => {
     </div>
   );
 };
+
+// Size options
+export const sizeOptions = [
+  { value: 'XS', label: 'XS' },
+  { value: 'S', label: 'S' },
+  { value: 'M', label: 'M' },
+  { value: 'L', label: 'L' },
+  { value: 'XL', label: 'XL' },
+  { value: 'XXL', label: 'XXL' },
+];
+
+// Custom styles for the select dropdown
+export const customStyles = {
+  control: (provided) => ({
+      ...provided,
+      border: '1px solid #333333',
+      borderRadius: '0',
+  }),
+  multiValue: (provided) => ({
+      ...provided,
+      backgroundColor: '#e9ecef',
+      borderRadius: '0.25rem',
+  }),
+  multiValueLabel: (provided) => ({
+      ...provided,
+      color: '#495057',
+      padding: '6px 20px',
+      fontSize: '1rem',
+  }),
+  multiValueRemove: (provided) => ({
+      ...provided,
+      color: '#dc3545',
+      ':hover': {
+          color: '#721c24',
+      },
+  }),
+};
+
+// Custom Select component
+export const CustomMultiSelect = ({ value, onChange, options = sizeOptions, placeholder = '' }) => {
+  return (
+      <Select
+          isMulti
+          options={options}
+          value={value}
+          onChange={onChange}
+          styles={customStyles}
+          className="basic-multi-select"
+          classNamePrefix="select"
+          placeholder={placeholder}
+          required
+      />
+  );
+};
+
+

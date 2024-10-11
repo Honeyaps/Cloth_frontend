@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import './specialCard.css';
 import UserAPIService from '../../../../services/user_service';
 import { toast } from 'sonner';
+import { LoadingSpinner } from '../../../../shared/helpers/helper';
+import { useNavigate } from 'react-router-dom';
 
 export const SpecialCard = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   const limit = 4;
 
   useEffect(() => {
@@ -28,8 +31,14 @@ export const SpecialCard = () => {
     fetchProducts();
   }, []);
 
+  const handleProductClick = (productId) => {
+    navigate(`/product-view/${productId}`); 
+};
+
   if (loading) {
-    return <div className="loading">Loading products...</div>;
+    return <div className="loading">
+        <LoadingSpinner />
+    </div>;
   }
 
   return (
@@ -51,7 +60,11 @@ export const SpecialCard = () => {
 
       <div className="row mt-4 justify-content-center">
         {products.map((product, index) => (
-          <div className="col-md-6 mt-5" key={index}>
+          <div 
+          className="col-md-6 mt-5" 
+          key={index}
+          style={{ cursor: 'pointer' }}
+          onClick={() => handleProductClick(product._id)}>
             <img
               src={product.card_pic} 
               alt={product.name}

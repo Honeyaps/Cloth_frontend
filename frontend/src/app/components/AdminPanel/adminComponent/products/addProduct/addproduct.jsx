@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AddConfirmationAlert , LoadingButton} from "../../../../../shared/helpers/helper";
+import { AddConfirmationAlert , CustomMultiSelect, LoadingButton} from "../../../../../shared/helpers/helper";
 import AdminAPIService from '../../../../../services/admin_service';
 import { toast } from 'sonner';
 import { Alert } from 'react-bootstrap';
@@ -9,7 +9,7 @@ export const AddProduct = ({ setActiveComponent}) => {
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
     const [category, setCategory] = useState('');
-    const [quantity, setQuantity] = useState('');
+    const [size, setSize] = useState([]);
     const [card_pic, setCardPic] = useState(null);
     const [images, setImages] = useState(Array(4).fill(null));
     const [isLoading, setIsLoading] = useState(false); 
@@ -23,16 +23,27 @@ export const AddProduct = ({ setActiveComponent}) => {
         }
     };
 
+    const validateForm = () => {
+        if (!productName || !description || !price || !category || !size || !card_pic || !images) {
+            toast.error('Please fill all the required fields');
+            return false;
+        }
+    }
+
     const handleAddProduct = async (e) => {
         e.preventDefault();
         setIsLoading(true);
+        if (!validateForm()) {
+            setIsLoading(false);
+            return;
+        }
 
         const formData = new FormData();
         formData.append('productName', productName);
         formData.append('description', description);
         formData.append('price', price);
         formData.append('category', category);
-        formData.append('quantity', quantity);
+        formData.append('size', size.map(item => item.value).join(','));
         if (card_pic) {
             formData.append('card_pic', card_pic);
         }
@@ -61,7 +72,7 @@ export const AddProduct = ({ setActiveComponent}) => {
         setDescription('');
         setPrice('');
         setCategory('');
-        setQuantity('');
+        setSize([]);
         setCardPic(null);
         setImages(Array(4).fill(null));
     };
@@ -133,15 +144,12 @@ export const AddProduct = ({ setActiveComponent}) => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="quantity" className="col-md-12 text-start">
-                                Quantity <span className="text-danger">*</span>
+                            <label className="col-md-12 text-start">
+                                Size <span className="text-danger">*</span>
                             </label>
-                            <input
-                                type="number"
-                                className="col-md-12"
-                                id="quantity"
-                                value={quantity}
-                                onChange={(e) => handleInputChange(e, setQuantity)}
+                            <CustomMultiSelect
+                                value={size}
+                                onChange={setSize}
                                 required
                             />
                         </div>

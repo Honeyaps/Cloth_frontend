@@ -8,6 +8,8 @@ import UserAPIService from '../../../../services/user_service';
 import { CiSearch } from "react-icons/ci";
 import { toast } from 'sonner';
 import AdminAPIService from '../../../../services/admin_service';
+import { IoMdEye } from "react-icons/io";
+
 
 export const Products = ({ setActiveComponent }) => {
   const [products, setProducts] = useState([]);
@@ -16,22 +18,24 @@ export const Products = ({ setActiveComponent }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const limit = 11;
 
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const response = await UserAPIService.getProducts({ limit, page });
+      setProducts(response.data.product);
+    } catch (err) {
+      console.error('Error fetching products:', err);
+      toast.error('Error fetching products. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        const response = await UserAPIService.getProducts({ limit, page });
-        setProducts(response.data.product);
-      } catch (err) {
-        console.error('Error fetching products:', err);
-        toast.error('Error fetching products. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
+   
 
     fetchProducts();
-  }, [page]); // Fetch products on page change
+  }, [page]); 
 
   const handleAddProductClick = (productId) => {
     setActiveComponent('AddProduct', productId);
@@ -41,6 +45,10 @@ export const Products = ({ setActiveComponent }) => {
     setActiveComponent('EditProduct', productId);
   };
 
+  const handleViewProduct = (productId) => {
+    setActiveComponent('ViewProduct', productId);
+  };
+
   const handleDelete = (productId, productName) => {
     DeleteConfirmationAlert({
       text: `You are about to delete ${productName}`,
@@ -48,8 +56,14 @@ export const Products = ({ setActiveComponent }) => {
         try {
           const response = await AdminAPIService.deleteProduct({ id: productId });
           if (response.status === 1) {
-            toast.success(`${productName} has been deleted successfully.`);
+            toast.success(`${productName || 'Product'} has been deleted successfully.`);
             setProducts((prevProducts) => prevProducts.filter((product) => product._id !== productId)); 
+            if (products.length === 1 && page > 1) {
+              setPage(prevPage => prevPage - 1); // Go to the previous page if this was the last product on the current page
+            }
+            
+            // Fetch products again to ensure the list is up-to-dat
+            await fetchProducts(); 
           } else {
             toast.error('Failed to delete product.');
           }
@@ -145,7 +159,6 @@ export const Products = ({ setActiveComponent }) => {
                       <th>Product Name</th>
                       <th>Category</th>
                       <th>Price</th>
-                      <th>Quantity</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -156,8 +169,7 @@ export const Products = ({ setActiveComponent }) => {
                           <td>{index + 1 + (page - 1) * limit}</td>
                           <td>{product.productName}</td>
                           <td>{product.category}</td>
-                          <td>${product.price}</td>
-                          <td>{product.quantity}</td>
+                          <td>RS. {product.price}</td>
                           <td>
                             <button className="bg-transparent border-0" onClick={() => handleEditProduct  (product._id)}>
                               <GrEdit className='nav-icon' />
@@ -168,7 +180,12 @@ export const Products = ({ setActiveComponent }) => {
                             >
                               <RiDeleteBinLine className='nav-icon' />
                             </button>
-
+                            <button
+                              className="bg-transparent border-0"
+                              onClick={() => handleViewProduct(product._id)}
+                            >
+                              <IoMdEye className='nav-icon' />
+                            </button>
                           </td>
                         </tr>
                       ))

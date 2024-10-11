@@ -12,35 +12,49 @@ export const Newin = () => {
     const [allProducts, setAllProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [priceRange, setPriceRange] = useState(''); 
+    const [size, setSize] = useState('');
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            setLoading(true);
-            try {
-                const response = await UserAPIService.getProducts();
-                const products = response.data.product;
-                setAllProducts(products); 
-                setFilteredProducts(products); 
-            } catch (err) {
-                console.error('Error fetching products:', err);
-                toast.error('Error fetching products. Please try again later.');
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchProducts = async (category = activeCategory, priceRangeValue = priceRange, sizeValue = size) => {
+        setLoading(true);
+        
+        try {
+            const response = await UserAPIService.getProducts({
+                category: category === 'All' ? '' : category,
+                priceRange: priceRangeValue ,
+                size: sizeValue
+            });
+            const products = response.data.product;
+            setAllProducts(products); 
+            setFilteredProducts(products); 
+        } catch (err) {
+            console.error('Error fetching products:', err);
+            toast.error('Error fetching products. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchProducts();
     }, []);
 
     const handleCategoryClick = (category) => {
         setActiveCategory(category);
-        if (category === 'All') {
-            setFilteredProducts(allProducts); 
-        } else {
-            const newFilteredProducts = allProducts.filter((product) => product.category === category);
-            setFilteredProducts(newFilteredProducts);
-        }
+        fetchProducts(category, priceRange); 
+    };
+
+    const handleSortChange = (e) => {
+        const selectedPriceRange = e.target.value;
+        setPriceRange(selectedPriceRange);
+        fetchProducts(activeCategory, selectedPriceRange, size);
+    };
+
+    const handleSizeChange = (e) => {
+        const selectedSize = e.target.value;
+        setSize(selectedSize);
+        fetchProducts(activeCategory, priceRange, selectedSize);
     };
 
     const handleProductClick = (productId) => {
@@ -71,18 +85,22 @@ export const Newin = () => {
                 <div className="row">
                     <div className="col-md-6 d-flex">
                         <p>Filter :</p>
-                        <select className="ms-3 p-2 border filter_box">
-                            <option selected>Size</option>
-                            <option>xxl</option>
-                            <option>xl</option>
+                        <select className="ms-3 p-2 border filter_box" vlue={size} onChange={handleSizeChange}>
+                            <option selected value="">Size</option>
+                            <option value="XXL">XXL</option>
+                            <option value="XL">XL</option>
+                            <option value="L">L</option>
+                            <option value="M">M</option>
+                            <option value="S">S</option>
+                            <option value="XS">XS</option>
                         </select>
                     </div>
                     <div className="col-md-6 d-flex justify-content-end">
                         <p>Sort By :</p>
-                        <select className="ms-3 p-2 border filter_box">
-                            <option selected>Price</option>
-                            <option>Price High to Low</option>
-                            <option>Price Low to High</option>
+                        <select className="ms-3 p-2 border filter_box" value={priceRange} onChange={handleSortChange}>
+                            <option selected value="">Price</option>
+                            <option value="h2l">Price High to Low</option>
+                            <option value="l2h">Price Low to High</option>
                         </select>
                     </div>
                 </div>
@@ -94,7 +112,7 @@ export const Newin = () => {
                     ) : filteredProducts.length > 0 ? (
                         filteredProducts.map((product) => (
                             <div 
-                                key={product.id} 
+                                key={product._id} 
                                 className="col-lg-2 col-md-3 col-sm-4 col-6 mb-4"
                                 onClick={() => handleProductClick(product._id)} 
                                 style={{ cursor: 'pointer' }} 
