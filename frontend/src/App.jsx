@@ -24,7 +24,7 @@ function App() {
         position="top-right"
         className='mx-3'
         toastOptions={{
-          duration: 1000,
+          duration: 2000,
         }}
       />
 

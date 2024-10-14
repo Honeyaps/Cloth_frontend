@@ -12,18 +12,34 @@ import { useEffect, useState } from "react";
 import UserAPIService from "../../../../../services/user_service";
 import { toast } from "sonner";
 import { useCart } from "../../../../../services/common_service";
+import { Order } from "../../shoppingBag/order/order";
 
 export const CardView = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
-  const userId = localStorage.getItem("userId");
   const [isOpen, setIsOpen] = useState(false);
-  const { addToCart } = useCart(); 
+  const [isBuyNow, setIsBuyNow] = useState(false);
+  const { addToCart } = useCart();
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+
+  const BuyNow = () => {
+    if (!token) {
+        toast.error("Please login to buy product");
+        return;
+    }
+
+    if (!selectedSize) {
+        toast.error("Please select a size");
+        return;
+    }
+    setIsBuyNow(true);
+};
 
   const settings = {
     vertical: true,
@@ -71,7 +87,7 @@ export const CardView = () => {
   }, [productId]);
 
   const handleSizeSelection = (size) => {
-    setSelectedSize(size); 
+    setSelectedSize(size);
   };
 
 
@@ -84,31 +100,59 @@ export const CardView = () => {
       toast.error("Please select a size");
       return;
     }
-  
+
     const cartData = {
       productId,
       quantity: 1,
       size: selectedSize,
       userId
     };
-  
+
     try {
       const response = await UserAPIService.addToCart(cartData);
-      
       const addedProduct = {
         productDetail: product,
         size: selectedSize,
         quantity: 1,
       };
-  
       addToCart(addedProduct);
+
       toast.success("Product added to cart");
     } catch (error) {
-      console.error("Error while adding to cart:", error); 
+      console.error("Error while adding to cart:", error);
       toast.error(`Failed to add product to cart: ${error.message}`);
     }
   };
+
   
+
+  // const handleBuyNow = async () => {
+  //   if (!userId) {
+  //     toast.error("Please login to add product to cart");
+  //     return;
+  //   }
+  //   if (!selectedSize) {
+  //     toast.error("Please select a size");
+  //     return;
+  //   }
+
+  //   const cartData = {
+  //     productId,
+  //     quantity: 1,
+  //     size: selectedSize,
+  //     userId
+  //   };
+
+  //   try {
+  //     const response = await UserAPIService.addToCart(cartData);
+  //   }
+
+  //   catch (error) { 
+  //     console.error("Error while adding to cart:", error);
+  //     toast.error(`Failed to add product to cart: ${error.message}`);
+  //   }
+  // };
+
 
   return (
     <>
@@ -156,7 +200,7 @@ export const CardView = () => {
               </div>
               <h6 className="mt-3">DESCRIPTION</h6>
               <p>{product?.description}</p>
-              <button className="bg-transparent form_btn text-black border border-black w-100">
+              <button className="bg-transparent form_btn text-black border border-black w-100" onClick={BuyNow}>
                 BUY NOW
               </button>
               <button className="form_btn w-100 mt-3" onClick={handleAddToCart}>
@@ -170,63 +214,63 @@ export const CardView = () => {
                 above 1999
               </h6>
               <div className="material-dropdown">
-    <h6 className="mt-4" onClick={toggleDropdown}>
-        Size Chart {isOpen ? '▲' : '▼'}
-    </h6>
-    {isOpen && (
-        <div className="dropdown-content">
-            <p><strong>Size Chart for Clothing</strong></p>
-            <table className="table table-bordered table-striped mt-2">
-                <thead className="table-light">
-                    <tr>
-                        <th>Size</th>
-                        <th>Chest (inches)</th>
-                        <th>Waist (inches)</th>
-                        <th>Hip (inches)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>XS</td>
-                        <td>31-32</td>
-                        <td>24-25</td>
-                        <td>33-34</td>
-                    </tr>
-                    <tr>
-                        <td>S</td>
-                        <td>33-34</td>
-                        <td>26-27</td>
-                        <td>35-36</td>
-                    </tr>
-                    <tr>
-                        <td>M</td>
-                        <td>35-36</td>
-                        <td>28-29</td>
-                        <td>37-38</td>
-                    </tr>
-                    <tr>
-                        <td>L</td>
-                        <td>37-39</td>
-                        <td>30-32</td>
-                        <td>39-41</td>
-                    </tr>
-                    <tr>
-                        <td>XL</td>
-                        <td>40-42</td>
-                        <td>33-35</td>
-                        <td>42-44</td>
-                    </tr>
-                    <tr>
-                        <td>XXL</td>
-                        <td>43-45</td>
-                        <td>36-38</td>
-                        <td>45-47</td>
-                    </tr>    
-                </tbody>
-            </table>
-        </div>
-    )}
-</div>
+                <h6 className="mt-4" onClick={toggleDropdown}>
+                  Size Chart {isOpen ? '▲' : '▼'}
+                </h6>
+                {isOpen && (
+                  <div className="dropdown-content">
+                    <p><strong>Size Chart for Clothing</strong></p>
+                    <table className="table table-bordered table-striped mt-2">
+                      <thead className="table-light">
+                        <tr>
+                          <th>Size</th>
+                          <th>Chest (inches)</th>
+                          <th>Waist (inches)</th>
+                          <th>Hip (inches)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>XS</td>
+                          <td>31-32</td>
+                          <td>24-25</td>
+                          <td>33-34</td>
+                        </tr>
+                        <tr>
+                          <td>S</td>
+                          <td>33-34</td>
+                          <td>26-27</td>
+                          <td>35-36</td>
+                        </tr>
+                        <tr>
+                          <td>M</td>
+                          <td>35-36</td>
+                          <td>28-29</td>
+                          <td>37-38</td>
+                        </tr>
+                        <tr>
+                          <td>L</td>
+                          <td>37-39</td>
+                          <td>30-32</td>
+                          <td>39-41</td>
+                        </tr>
+                        <tr>
+                          <td>XL</td>
+                          <td>40-42</td>
+                          <td>33-35</td>
+                          <td>42-44</td>
+                        </tr>
+                        <tr>
+                          <td>XXL</td>
+                          <td>43-45</td>
+                          <td>36-38</td>
+                          <td>45-47</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
 
             </div>
 
@@ -266,7 +310,9 @@ export const CardView = () => {
             </div>
           </div>
         </div>
+        
       </div>
+      <Order isOpen={isBuyNow} setIsOpen={setIsBuyNow} productId={productId} size={selectedSize} />
       <Footer />
     </>
   );
