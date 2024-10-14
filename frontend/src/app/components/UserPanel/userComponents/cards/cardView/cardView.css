@@ -36,6 +36,7 @@ legend {
     padding: 10px; 
     position: relative; 
     gap: 5px; 
+    cursor: pointer;
 }
 
 .dropdown-content {

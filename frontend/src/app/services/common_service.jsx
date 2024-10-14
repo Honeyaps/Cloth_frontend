@@ -14,7 +14,6 @@ export const CartProvider = ({ children }) => {
 
       try {
         const response = await UserAPIService.getCartItems({ userId });
-        // Filter the cart items to get only those with status === 1
         const filteredItems = response.data.product.filter(item => item.status === 1);
         
         setCartItems(filteredItems);
@@ -32,14 +31,25 @@ export const CartProvider = ({ children }) => {
     setCartCount(prevCount => prevCount + 1);
   };
 
-  const removeFromCart = (productId) => {
-    const updatedCart = cartItems.filter(item => item._id !== productId);
+  const removeFromCart = (productId, size) => {
+    const updatedCart = cartItems.filter(item => !(item.productId === productId && item.size === size));
     setCartItems(updatedCart);
     setCartCount(updatedCart.length);
   };
 
+  const updateCartItemQuantity = async (productId, size, newQuantity) => {
+      await UserAPIService.addToCart({ userId, productId, size, quantity: newQuantity });
+      setCartItems(prevItems =>
+        prevItems.map(item =>
+          item.productId === productId && item.size === size
+            ? { ...item, quantity: newQuantity }
+            : item
+        )
+      );
+  };
+
   return (
-    <CartContext.Provider value={{ cartItems, cartCount, addToCart, removeFromCart }}>
+    <CartContext.Provider value={{ cartItems, cartCount, addToCart, removeFromCart, updateCartItemQuantity }}>
       {children}
     </CartContext.Provider>
   );
