@@ -44,6 +44,20 @@ class UserAPIService {
       return response.data;
     }
 
+    static async addToCart(data) {
+      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+      const response = await axios.post(`${API_URL}/user/addToCart`, data, { headers });
+      return response.data;
+    }
+
+    static async removeCartItem(data) {
+      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+      const response = await axios.post(`${API_URL}/user/removeFromCart`, data, { headers });
+      return response.data;
+    }
+
+
+
   }
   
 export default UserAPIService;

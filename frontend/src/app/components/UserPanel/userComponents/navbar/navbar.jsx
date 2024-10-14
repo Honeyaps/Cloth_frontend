@@ -11,8 +11,10 @@ import { BsHandbag } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
 import { GoSearch } from "react-icons/go";
 import "./navbar.css";
+import { useCart } from "../../../../services/common_service";
 
 export const Navbar = () => {
+  const { cartCount } = useCart();
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [showSigninModal, setShowSigninModal] = useState(false);
@@ -82,7 +84,7 @@ export const Navbar = () => {
                 <CiHeart className="nav-icon"/> Favourites
               </a>
               <a href="/shoppingbag" className="text-dark">
-                <IoBagCheckOutline className="nav-icon"/> Shopping bag
+                <IoBagCheckOutline className="nav-icon"/> Shopping bag ({cartCount})
               </a>
             </div>
           </div>

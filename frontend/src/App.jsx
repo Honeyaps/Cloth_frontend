@@ -14,13 +14,18 @@ import { FPresetPass } from './app/components/UserPanel/registration/forgetPass/
 import { AdminPortal } from './app/components/AdminPanel/adminComponent/adminPortal';
 import { CardView } from './app/components/UserPanel/userComponents/cards/cardView/cardView';
 import { Toaster } from 'sonner';
+import { CartProvider } from './app/services/common_service';
 
 function App() {
   return (
+    <CartProvider>
     <Router>
       <Toaster
         position="top-right"
         className='mx-3'
+        toastOptions={{
+          duration: 2000,
+        }}
       />
 
       <Routes>
@@ -38,6 +43,7 @@ function App() {
         <Route path="/product-view/:productId" element={<CardView />} />
       </Routes>
     </Router>
+    </CartProvider>
   );
 }
 

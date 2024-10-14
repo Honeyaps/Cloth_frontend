@@ -2,7 +2,6 @@ import { Navbar } from "../../navbar/navbar";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { IoBagOutline } from "react-icons/io5";
 import { PiBag } from "react-icons/pi";
 import { CiTimer } from "react-icons/ci";
 import "./cardView.css";
@@ -11,10 +10,20 @@ import { CiDeliveryTruck } from "react-icons/ci";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import UserAPIService from "../../../../../services/user_service";
+import { toast } from "sonner";
+import { useCart } from "../../../../../services/common_service";
 
 export const CardView = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const userId = localStorage.getItem("userId");
+  const [isOpen, setIsOpen] = useState(false);
+  const { addToCart } = useCart(); 
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
 
   const settings = {
     vertical: true,
@@ -53,7 +62,6 @@ export const CardView = () => {
       try {
         const response = await UserAPIService.getProducts({ productId });
         setProduct(response.data.product[0]);
-        console.log(response.data.product[0]);
       } catch (error) {
         console.error(error);
       }
@@ -61,6 +69,46 @@ export const CardView = () => {
 
     fetchData();
   }, [productId]);
+
+  const handleSizeSelection = (size) => {
+    setSelectedSize(size); 
+  };
+
+
+  const handleAddToCart = async () => {
+    if (!userId) {
+      toast.error("Please login to add product to cart");
+      return;
+    }
+    if (!selectedSize) {
+      toast.error("Please select a size");
+      return;
+    }
+  
+    const cartData = {
+      productId,
+      quantity: 1,
+      size: selectedSize,
+      userId
+    };
+  
+    try {
+      const response = await UserAPIService.addToCart(cartData);
+      
+      const addedProduct = {
+        productDetail: product,
+        size: selectedSize,
+        quantity: 1,
+      };
+  
+      addToCart(addedProduct);
+      toast.success("Product added to cart");
+    } catch (error) {
+      console.error("Error while adding to cart:", error); 
+      toast.error(`Failed to add product to cart: ${error.message}`);
+    }
+  };
+  
 
   return (
     <>
@@ -93,10 +141,17 @@ export const CardView = () => {
               />
               <h6>SIZES</h6>
               <div className="row d-flex gap-2 my-3 mx-1">
-                {product?.size.map((sizes) => (
-                  <button className="col-md-2 border border-dark p-2 text-center bg-transparent">
+                {product?.size.map((sizes, index) => (
+                  <button
+                    key={index}  // Add a key prop to the button
+                    className={`col-md-2 border border-dark p-2 text-center button-size ${selectedSize === sizes ? "selected-size" : ""
+                      }`}
+                    onClick={() => handleSizeSelection(sizes)}  // Handle size selection
+                    value={sizes}
+                  >
                     {sizes}
                   </button>
+
                 ))}
               </div>
               <h6 className="mt-3">DESCRIPTION</h6>
@@ -104,8 +159,8 @@ export const CardView = () => {
               <button className="bg-transparent form_btn text-black border border-black w-100">
                 BUY NOW
               </button>
-              <button className="form_btn w-100 mt-3">
-                <PiBag className="nav-icon" /> Add
+              <button className="form_btn w-100 mt-3" onClick={handleAddToCart}>
+                <PiBag className="nav-icon" /> Add to Cart
               </button>
               <h6 className="mt-4">
                 <CiTimer className="nav-icon fs-4" /> Delivery within 2-7 days
@@ -114,30 +169,75 @@ export const CardView = () => {
                 <CiDeliveryTruck className="nav-icon fs-4" /> Free shipping
                 above 1999
               </h6>
-              <h6 className="mt-4">Materials</h6>
-              <p>
-                Composition <br />
-                Polyester 60%, Viscose 35%, Elastane 5% Additional material
-                information The total weight of this product contains: 70%
-                Recycled polyester 25% LENZING™ ECOVERO™ viscose We exclude the
-                weight of minor components such as, but not exclusively:
-                threads, buttons, zippers, embellishments and prints. The total
-                weight of the product is calculated by adding the weight of all
-                layers and main components together. Based on that, we calculate
-                how much of that weight is made out by each material. For sets &
-                multipacks all pieces are counted together as one product in
-                calculations.
-              </p>
+              <div className="material-dropdown">
+    <h6 className="mt-4" onClick={toggleDropdown}>
+        Size Chart {isOpen ? '▲' : '▼'}
+    </h6>
+    {isOpen && (
+        <div className="dropdown-content">
+            <p><strong>Size Chart for Clothing</strong></p>
+            <table className="table table-bordered table-striped mt-2">
+                <thead className="table-light">
+                    <tr>
+                        <th>Size</th>
+                        <th>Chest (inches)</th>
+                        <th>Waist (inches)</th>
+                        <th>Hip (inches)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>XS</td>
+                        <td>31-32</td>
+                        <td>24-25</td>
+                        <td>33-34</td>
+                    </tr>
+                    <tr>
+                        <td>S</td>
+                        <td>33-34</td>
+                        <td>26-27</td>
+                        <td>35-36</td>
+                    </tr>
+                    <tr>
+                        <td>M</td>
+                        <td>35-36</td>
+                        <td>28-29</td>
+                        <td>37-38</td>
+                    </tr>
+                    <tr>
+                        <td>L</td>
+                        <td>37-39</td>
+                        <td>30-32</td>
+                        <td>39-41</td>
+                    </tr>
+                    <tr>
+                        <td>XL</td>
+                        <td>40-42</td>
+                        <td>33-35</td>
+                        <td>42-44</td>
+                    </tr>
+                    <tr>
+                        <td>XXL</td>
+                        <td>43-45</td>
+                        <td>36-38</td>
+                        <td>45-47</td>
+                    </tr>    
+                </tbody>
+            </table>
+        </div>
+    )}
+</div>
+
             </div>
 
-            <div class="col-md-12 mt-5">
+            <div className="col-md-12 mt-5">
               <fieldset>
                 <legend>Comments</legend>
                 <div className="row mx-0">
                   <div className="col-md-12">
                     <form className="">
                       <div className="mb-3">
-                        <label for="addComment" className="col-md-12">
+                        <label htmlFor="addComment" className="col-md-12">
                           Add a comment
                         </label>
                         <textarea
@@ -154,7 +254,7 @@ export const CardView = () => {
                         </div>
                       </div>
                       <div className="mb-3">
-                        <label for="name" className="col-md-12">
+                        <label htmlFor="name" className="col-md-12">
                           @Name
                         </label>
                         <div>ljkldbvalbvldb</div>
