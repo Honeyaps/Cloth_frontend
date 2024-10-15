@@ -44,7 +44,6 @@ export const SignupModal = ({ show, handleClose, handleOpenOTP, openSigninModal,
       const response = await UserAPIService.generateOtp({ email: formData.email });
       const token = response.data.token;
       localStorage.setItem('token', token);
-      toast.success(response.data.message || 'Signup successful');
       handleOpenOTP();
     } catch (error) {
       toast.error(error.response.data.message || 'Error occurred while signing up');
