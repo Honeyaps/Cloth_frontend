@@ -45,16 +45,27 @@ class UserAPIService {
     }
 
     static async addToCart(data) {
-      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
-      const response = await axios.post(`${API_URL}/user/addToCart`, data, { headers });
+      const response = await axios.post(`${API_URL}/user/addToCart`, data);
       return response.data;
     }
 
     static async removeCartItem(data) {
-      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
-      const response = await axios.post(`${API_URL}/user/removeFromCart`, data, { headers });
+      const response = await axios.post(`${API_URL}/user/removeFromCart`, data);
       return response.data;
     }
+
+    static async buyNow(data) {
+      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+      const response = await axios.post(`${API_URL}/user/buynow`, data, { headers });
+      return response.data;
+    }
+
+    static async placeCartOrder(data) {
+      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+      const response = await axios.post(`${API_URL}/user/placeCartOrder`, data, { headers });
+      return response.data;
+    }
+
 
 
 

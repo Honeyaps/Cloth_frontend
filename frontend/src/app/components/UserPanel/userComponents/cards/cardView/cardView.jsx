@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import UserAPIService from "../../../../../services/user_service";
 import { toast } from "sonner";
 import { useCart } from "../../../../../services/common_service";
-import { Order } from "../../shoppingBag/order/order";
+import { BuyNowModal } from "./buyNow/buyNow";
 
 export const CardView = () => {
   const { productId } = useParams();
@@ -312,7 +312,7 @@ export const CardView = () => {
         </div>
         
       </div>
-      <Order isOpen={isBuyNow} setIsOpen={setIsBuyNow} productId={productId} size={selectedSize} />
+      <BuyNowModal isOpen={isBuyNow} setIsOpen={setIsBuyNow} productId={productId} size={selectedSize} />
       <Footer />
     </>
   );

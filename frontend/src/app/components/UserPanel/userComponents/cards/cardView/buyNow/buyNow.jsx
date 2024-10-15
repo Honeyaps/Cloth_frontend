@@ -1,23 +1,22 @@
-import './order.css';
+import './buyNow.css';
 import Modal from 'react-modal';
 import { useEffect, useState } from 'react';
 import { IoMdClose } from "react-icons/io";
 import { IoBagOutline } from "react-icons/io5";
 import { RiDiscountPercentFill } from "react-icons/ri";
 import { IoIosArrowDropleft, IoIosArrowDropright } from "react-icons/io";
-import { Step1 } from './step1/step1';
-import { Step2 } from './step2/step2';
-import { useCart } from '../../../../../services/common_service';
-import UserAPIService from '../../../../../services/user_service';
+import { Step1 } from '../../../shoppingBag/order/step1/step1';
+import { Step2 } from '../../../shoppingBag/order/step2/step2';
+import UserAPIService from '../../../../../../services/user_service';
 
-export const Order = ({ isOpen, setIsOpen }) => {
+export const BuyNowModal = ({ isOpen, setIsOpen, productId, size }) => {
     const [currentStep, setCurrentStep] = useState(1);
-    const { cartItems, setCartItems } = useCart();
+    const [productDetails, setProductDetails] = useState(null);
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("token");
 
     const steps = [
-        { name: 'User Details', component: <Step1 /> },
+        { name: 'User Details', component: <Step1 productId={productId} size={size} /> },
         { name: 'Payment', component: <Step2 /> },
     ];
 
@@ -37,22 +36,20 @@ export const Order = ({ isOpen, setIsOpen }) => {
     };
 
     useEffect(() => {
-        const fetchCartItems = async () => {
-            if (!userId) return;
+        const fetchProductDetails = async () => {
+            if (!productId) return; 
 
             try {
-                const response = await UserAPIService.getCartItems({ userId });
-                console.log("modaldata console",response.data.product);
-                setCartItems(response.data.product);
+                const response = await UserAPIService.getProducts({ productId });
+                console.log("Product Details", response.data.product);
+                setProductDetails(response.data.product[0]); 
             } catch (error) {
-                console.error("Error fetching cart items:", error);
+                console.error("Error fetching product details:", error);
             }
         };
 
-        fetchCartItems();
-    }, [userId, setCartItems]);
-
-    const totalPrice = cartItems.reduce((total, item) => total + item.productDetail.price * item.quantity, 0).toFixed(2);
+        fetchProductDetails();
+    }, [productId]);
 
     const handleNext = () => {
         if (currentStep < steps.length) {
@@ -75,34 +72,30 @@ export const Order = ({ isOpen, setIsOpen }) => {
                         <div><IoBagOutline className='nav-icon' /></div>
                     </div>
 
-                    {cartItems.length > 0 ? (
-                        cartItems.map((item) => (
-                    <div className='bg-white p-3 mt-2 rounded d-flex' key={item._id}>
-                        <div className='col-md-4'>
-                            <img src={item.productDetail.card_pic} alt="" className='w-50 rounded'/>
-                        </div>
-                        <div className='col-md-8'>
-                            <div>
-                                <h6>{item.productDetail.productName} - {item.size}</h6>
+                    {productDetails ? (
+                        <div className='bg-white p-3 mt-2 rounded d-flex'>
+                            <div className='col-md-4'>
+                                <img src={productDetails.card_pic} alt={productDetails.productName} className='w-50 rounded' />
                             </div>
-
-                            <div className='d-flex justify-content-between mt-3'>
-                                <div>Quantity : {item.quantity}</div>
-                                <div>Price : RS. {item.productDetail.price}</div>
+                            <div className='col-md-8'>
+                                <div>
+                                    <h6>{productDetails.productName} - {size}</h6>
+                                </div>
+                                <div className='d-flex justify-content-between mt-3'>
+                                    <div>Quantity: 1</div>
+                                    <div>Price: RS. {productDetails.price}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    ))
                     ) : (
-                        <div>No items in the cart</div>
+                        <div>Loading product details...</div>
                     )}
 
-                   
                     <div className='bg-white p-3 mt-2 rounded'>
                         <div className='col-md-12'>
                             <div className='d-flex justify-content-between'>
                                 <div>Subtotal</div>
-                                <div>RS. {totalPrice}</div>
+                                <div>RS. {productDetails ? productDetails.price : '0.00'}</div>
                             </div>
                             <div className='d-flex justify-content-between'>
                                 <div>Shipping</div>
@@ -111,7 +104,7 @@ export const Order = ({ isOpen, setIsOpen }) => {
                             <hr />
                             <div className='d-flex justify-content-between'>
                                 <h5>Total</h5>
-                                <h6>RS. {totalPrice}</h6>
+                                <h6>RS. {productDetails ? productDetails.price : '0.00'}</h6>
                             </div>
                         </div>
                     </div>
@@ -125,9 +118,7 @@ export const Order = ({ isOpen, setIsOpen }) => {
                                 <h6>Apply Coupon</h6>
                             </div>
                         </div>
-
                     </div>
-
                 </div>
 
                 <div className='col-md-8'>
@@ -139,7 +130,6 @@ export const Order = ({ isOpen, setIsOpen }) => {
                     </div>
 
                     <div className="multistep-container">
-                        {/* Step Indicators */}
                         <div className="step-indicators">
                             {steps.map((step, index) => (
                                 <div
@@ -151,12 +141,10 @@ export const Order = ({ isOpen, setIsOpen }) => {
                             ))}
                         </div>
 
-                        {/* Step Content */}
                         <div className="step-content">
                             {steps[currentStep - 1].component}
                         </div>
 
-                        {/* Navigation Buttons */}
                         <div className="button-container">
                             <button
                                 onClick={handlePrevious}
@@ -174,12 +162,8 @@ export const Order = ({ isOpen, setIsOpen }) => {
                             </button>
                         </div>
                     </div>
-
-                   
-
                 </div>
             </div>
-
         </Modal>
     );
 };
