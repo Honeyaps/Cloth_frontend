@@ -4,12 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Alert from 'react-bootstrap/Alert';
 import UserAPIService from '../../../services/user_service';
 import { toast } from 'sonner';
+import { LoadingButton } from '../../../shared/helpers/helper';
 
 export const OTPModal = ({ show, handleClose, formData }) => {
   const [otpValues, setOtpValues] = useState(Array(4).fill(""));
-  const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
-  
+  const [isLoading, setIsLoading] = useState(false); 
   const inputRefs = useRef([]);
 
   const handleChange = (e, index) => {
@@ -30,6 +29,7 @@ export const OTPModal = ({ show, handleClose, formData }) => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+    setIsLoading(true);
     const otp = parseInt(otpValues.join(""));
 
     try {
@@ -45,10 +45,12 @@ export const OTPModal = ({ show, handleClose, formData }) => {
       localStorage.setItem('token', token);
       localStorage.setItem('userId', userId);
       
-      toast.success('Signup successful');
+      toast.success( response.data.message ||'Signup successful');
       handleClose();
     } catch (error) {
-      setError(error.response.data.message);
+      toast.error(error.response.data.message || 'Error occurred while signing up');
+    } finally {
+      setIsLoading(false);
     }
 
   };
@@ -79,11 +81,14 @@ export const OTPModal = ({ show, handleClose, formData }) => {
                 />
               ))}
             </div>
-            {error && <p className="text-danger">{error}</p>}
-            {successMessage && <p className="text-success">{successMessage}</p>}
-            <button onClick={handleSubmit} className="form_btn w-100 mt-2">
+
+            <LoadingButton 
+            type="submit"
+            isLoading={isLoading} 
+            onClick={handleSubmit} 
+            className="form_btn w-100 mt-2">
               Submit
-            </button>
+            </LoadingButton>
           </form>
         </div>
       </Modal.Body>

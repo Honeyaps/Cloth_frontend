@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import UserAPIService from '../../../services/user_service';
+import { toast } from 'sonner';
+import { LoadingButton } from '../../../shared/helpers/helper';
 
 
 export const SignupModal = ({ show, handleClose, handleOpenOTP, openSigninModal, formData, onFormDataUpdate }) => {
-  const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); 
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -17,15 +18,15 @@ export const SignupModal = ({ show, handleClose, handleOpenOTP, openSigninModal,
   const validation = () => {
     const { email, username, password, confirmPassword } = formData;
     if (!email || !username || !password || !confirmPassword) {
-      setError('All fields are required');
+      toast.error('All fields are required');
       return false;
     }
     if (password.length < 6) {
-      setError('Password must be at least 6 characters long');
+      toast.error('Password must be at least 6 characters long');
       return false;
     }
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      toast.error('Passwords do not match');
       return false;
     }
     return true;
@@ -33,8 +34,7 @@ export const SignupModal = ({ show, handleClose, handleOpenOTP, openSigninModal,
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError(null);
-    setSuccessMessage(null);
+    setIsLoading(true);
 
     if (!validation()) {
       return;
@@ -44,10 +44,12 @@ export const SignupModal = ({ show, handleClose, handleOpenOTP, openSigninModal,
       const response = await UserAPIService.generateOtp({ email: formData.email });
       const token = response.data.token;
       localStorage.setItem('token', token);
-      setSuccessMessage(response.data.message);
+      toast.success(response.data.message || 'Signup successful');
       handleOpenOTP();
     } catch (error) {
-      setError(error.response.data.message);
+      toast.error(error.response.data.message || 'Error occurred while signing up');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -116,10 +118,13 @@ export const SignupModal = ({ show, handleClose, handleOpenOTP, openSigninModal,
             />
           </div>
 
-          {error && <p className="text-danger">{error}</p>}
-          {successMessage && <p className="text-success">{successMessage}</p>}
-
-          <button type='submit' className='form_btn w-100 mt-2'>Sign Up</button>
+          <LoadingButton 
+          type='submit' 
+          className='form_btn w-100 mt-2'  
+          isLoading={isLoading} 
+          onClick={handleSubmit}>
+            Sign Up
+          </LoadingButton>
           <p className='text-center mt-3'>Already have an account? <a href='#' onClick={openSigninModal}>Signin</a></p>
         </form>
       </Modal.Body>
