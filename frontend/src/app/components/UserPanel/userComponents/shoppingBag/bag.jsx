@@ -20,6 +20,10 @@ export const ShoppingBag = () => {
             toast.error("Please login to checkout");
             return;
         }
+        if (cartItems.length === 0) {
+            toast.error("Please add items to checkout");
+            return;
+        }
         setIsOpen(true);
     };
 
@@ -77,9 +81,9 @@ export const ShoppingBag = () => {
                                 <div className="col-md-8 p-3">
                                     <div>
                                         <h2>{item.productDetail.productName}</h2>
-                                        <h6 className="text-muted mt-3">RS. {item.productDetail.price.toFixed(2)}</h6>
+                                        <h6 className="text-muted mt-3">RS. {item.productDetail.price}</h6>
                                     </div>
-                                    <div className="d-flex mt-5">
+                                    <div className="d-flex mt-4">
                                         <div>
                                             <h6>Size</h6>
                                             <p>{item.size}</p>

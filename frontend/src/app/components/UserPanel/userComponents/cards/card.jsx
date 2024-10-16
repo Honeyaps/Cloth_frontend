@@ -53,7 +53,7 @@ export const Card = () => {
                         className="card_img img-fluid"
                     />
                     <h6>{product.productName}</h6>
-                    <p className="price">{product.price}</p>
+                    <p className="price">RS. {product.price}</p>
                 </div>
                     
                 ))}

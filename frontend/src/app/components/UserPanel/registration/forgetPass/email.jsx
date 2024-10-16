@@ -3,14 +3,15 @@ import { Footer } from "../../userComponents/footer/footer"
 import { Navbar } from "../../userComponents/navbar/navbar"
 import UserAPIService from "../../../../services/user_service";
 import { useState } from "react";
+import { LoadingButton } from "../../../../shared/helpers/helper";
+import { toast } from "sonner";
 
 
 export const FPEmail = () => {
     const [formData, setFormData] = useState({
         email: '' 
     });
-    const [error, setError] = useState(null);
-    const [successMessage, setSuccessMessage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate(); 
 
     const handleOnChange = (e) => {
@@ -20,12 +21,14 @@ export const FPEmail = () => {
 
     const handleSubmit = async(event) => {
         event.preventDefault();
+        setIsLoading(true);
         try {
             const response = await UserAPIService.FPemailVerify({ email: formData.email });
-            setSuccessMessage(response.data.message);
             navigate('/request-resetpassword/otp', { state: { email: formData.email } });
         } catch (error) {
-            setError(error.response.data.message);
+            toast.error(error.response.data.message || 'Error occurred while signing up');
+        } finally {
+            setIsLoading(false);
         }
 
         
@@ -56,12 +59,12 @@ export const FPEmail = () => {
                         />
                     </div>
 
-                    {error && <p className='text-danger text-start'>{error}</p>}
-                    {successMessage && <p className='text-success text-start'>{successMessage}</p>}
-
-                    <button type='submit' className='form_btn mt-2 w-100'>
+                    <LoadingButton  
+                    isLoading={isLoading}  
+                    type='submit' 
+                    className='form_btn mt-2 w-100'>
                         Submit
-                    </button>
+                    </LoadingButton>
                 </form>
             </div>
 

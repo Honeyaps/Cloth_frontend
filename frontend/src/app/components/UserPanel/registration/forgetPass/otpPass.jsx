@@ -4,16 +4,16 @@ import { Navbar } from "../../userComponents/navbar/navbar";
 import { Alert } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import UserAPIService from "../../../../services/user_service";
+import { toast } from "sonner";
+import { LoadingButton } from "../../../../shared/helpers/helper";
 
 export const FPOtp = () => {
     const [otpValues, setOtpValues] = useState(Array(4).fill(""));
-    const [error, setError] = useState(null);
-    const [successMessage, setSuccessMessage] = useState(null);
     const navigate = useNavigate();
     const location = useLocation(); 
-    const email = location.state?.email;  
-
+    const email = location.state?.email;
     const inputRefs = useRef([]);
+    const [isLoading, setIsLoading] = useState(false); 
 
     const handleChange = (e, index) => {
         const newOtpValues = [...otpValues];
@@ -34,13 +34,15 @@ export const FPOtp = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         const otp = parseInt(otpValues.join(""), 10);
         try {
             const response = await UserAPIService.FPverifyOtp({ otp, email });
-            setSuccessMessage(response.data.message);
             navigate("/request-resetpassword/otp/reset-password", { state: { email } });
         } catch (error) {
-            setError(error.response.data.message);
+            toast.error(error.response.data.message || "Error occurred while signing up");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -70,9 +72,11 @@ export const FPOtp = () => {
                             />
                         ))}
                     </div>
-                    {error && <Alert variant="danger mt-3 mx-auto w-25">{error}</Alert>}
-                    {successMessage && <Alert variant="success">{successMessage}</Alert>}
-                    <button className="form_btn w-25 mt-2">Verify OTP</button>
+                    <LoadingButton
+                    isLoading={isLoading}  
+                    className="form_btn w-25 mx-auto">
+                        Verify OTP
+                    </LoadingButton>
                 </form>
             </div>
 

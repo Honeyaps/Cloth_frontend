@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import UserAPIService from '../../../../../../services/user_service';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { LoadingButton } from '../../../../../../shared/helpers/helper';
 
 export const Step1 = ({ productId, size }) => {
     const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ export const Step1 = ({ productId, size }) => {
         mobileno: "",
         address: ""
     });
+    const [isLoading, setIsLoading] = useState(false);
     const userId = localStorage.getItem("userId");
     const navigate = useNavigate();
 
@@ -20,14 +22,35 @@ export const Step1 = ({ productId, size }) => {
         }));
     };
 
+    const validattion = () => {
+        if (!formData.email || !formData.mobileno || !formData.address) {
+            toast.error("Please fill in all required fields");
+            return false;
+        } 
+        if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            toast.error("Email address is invalid");
+            return false;
+        }
+        if (!/^\d{10}$/.test(formData.mobileno) || formData.mobileno.length !== 10) {
+            toast.error("Mobile number must be 10 digits");
+            return false;
+        }
+        return true;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+
+        if (!validattion()) {
+            setIsLoading(false);
+            return;
+        }
         const { mobileno, address } = formData; 
 
         try {
-            // Check if productId exists (i.e., product is in modal)
             if (productId) {
-                // If product exists, proceed with buyNow API call
+                // If productId exists, proceed with buyNow API call
                 await UserAPIService.buyNow({ productId, size, address, mobileno, userId });
                 toast.success("Order placed successfully");
             } else {
@@ -40,6 +63,8 @@ export const Step1 = ({ productId, size }) => {
         } catch (error) {
             console.error("Error placing order:", error);
             toast.error("Error placing order. Please try again.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -64,7 +89,7 @@ export const Step1 = ({ productId, size }) => {
                         className="col-md-12"
                         value={formData.email}
                         onChange={handleChange}
-                        required // Optional: Require email input
+                        required 
                     />
                 </div>
 
@@ -77,7 +102,7 @@ export const Step1 = ({ productId, size }) => {
                         className="col-md-12"
                         value={formData.mobileno}
                         onChange={handleChange}
-                        required // Optional: Require mobile number input
+                        required 
                     />
                 </div>
 
@@ -90,11 +115,16 @@ export const Step1 = ({ productId, size }) => {
                         style={{ height: '40px' }}
                         value={formData.address}
                         onChange={handleChange}
-                        required // Optional: Require address input
+                        required 
                     ></textarea>
                 </div>
 
-                <button type="submit" className="form_btn w-100">Next</button>
+                <LoadingButton 
+                type="submit" 
+                isLoading={isLoading}
+                className="form_btn w-100">
+                    Place Order
+                </LoadingButton>
             </form>
         </div>
     );

@@ -10,6 +10,7 @@ import { GrMap } from "react-icons/gr";
 import { BsHandbag } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
 import { GoSearch } from "react-icons/go";
+import { MdOutlineLocalOffer } from "react-icons/md";
 import "./navbar.css";
 import { useCart } from "../../../../services/common_service";
 
@@ -80,8 +81,8 @@ export const Navbar = () => {
               <a className="me-3 text-dark" onClick={handleShowSignin}>
                 <CiUser className="nav-icon"/> Sign in
               </a>
-              <a href="/favourites" className="me-3 text-dark">
-                <CiHeart className="nav-icon"/> Favourites
+              <a href="/offers" className="me-3 text-dark">
+                <MdOutlineLocalOffer className="nav-icon"/> Offers
               </a>
               <a href="/shoppingbag" className="text-dark">
                 <IoBagCheckOutline className="nav-icon"/> Shopping bag ({cartCount})

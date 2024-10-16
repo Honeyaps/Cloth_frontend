@@ -13,33 +13,46 @@ import UserAPIService from "../../../../../services/user_service";
 import { toast } from "sonner";
 import { useCart } from "../../../../../services/common_service";
 import { BuyNowModal } from "./buyNow/buyNow";
+import { OTPModal } from "../../../registration/otpverif";
+import { SignupModal } from "../../../registration/signup";
+import { SigninModal } from "../../../registration/signin";
 
 export const CardView = () => {
   const { productId } = useParams();
+  const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isBuyNow, setIsBuyNow] = useState(false);
-  const { addToCart } = useCart();
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showOTPModal, setShowOTPModal] = useState(false);
+  const [showSigninModal, setShowSigninModal] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    username: '',
+    password: '',
+  });
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+  const handleFormDataUpdate = (newFormData) => {
+    setFormData(newFormData);
   };
 
-  const BuyNow = () => {
-    if (!token) {
-        toast.error("Please login to buy product");
-        return;
-    }
+  const handleShowSignUp = () => setShowSignUpModal(true);
+  const handleCloseSignUp = () => setShowSignUpModal(false);
 
-    if (!selectedSize) {
-        toast.error("Please select a size");
-        return;
+  const handleShowSignin = () => setShowSigninModal(true);
+  const handleCloseSignin = () => setShowSigninModal(false);
+
+  const handleOpenOTP = () => {
+    if (!showOTPModal) {
+      setShowSignUpModal(false);
+      setShowOTPModal(true);
     }
-    setIsBuyNow(true);
-};
+  };
+
+  const handleCloseOTP = () => setShowOTPModal(false);
 
   const settings = {
     vertical: true,
@@ -73,6 +86,24 @@ export const CardView = () => {
     ],
   };
 
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const BuyNow = () => {
+    if (!token) {
+        setShowSigninModal(true);
+        toast.error("Please sign in to buy product");
+        return;
+    }
+
+    if (!selectedSize) {
+        toast.error("Please select a size");
+        return;
+    }
+    setIsBuyNow(true);
+};
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -93,7 +124,8 @@ export const CardView = () => {
 
   const handleAddToCart = async () => {
     if (!userId) {
-      toast.error("Please login to add product to cart");
+      toast.error("Please sign in to add product to cart");
+      setShowSigninModal(true);
       return;
     }
     if (!selectedSize) {
@@ -124,35 +156,7 @@ export const CardView = () => {
     }
   };
 
-  
-
-  // const handleBuyNow = async () => {
-  //   if (!userId) {
-  //     toast.error("Please login to add product to cart");
-  //     return;
-  //   }
-  //   if (!selectedSize) {
-  //     toast.error("Please select a size");
-  //     return;
-  //   }
-
-  //   const cartData = {
-  //     productId,
-  //     quantity: 1,
-  //     size: selectedSize,
-  //     userId
-  //   };
-
-  //   try {
-  //     const response = await UserAPIService.addToCart(cartData);
-  //   }
-
-  //   catch (error) { 
-  //     console.error("Error while adding to cart:", error);
-  //     toast.error(`Failed to add product to cart: ${error.message}`);
-  //   }
-  // };
-
+ 
 
   return (
     <>
@@ -176,7 +180,7 @@ export const CardView = () => {
           <div className="col-md-5 about_product">
             <div>
               <h1>{product?.productName}</h1>
-              <h6 className="price">RS. {product?.price}.00</h6>
+              <h6 className="price">RS. {product?.price}</h6>
               <img
                 src={product?.card_pic}
                 alt=""
@@ -187,10 +191,10 @@ export const CardView = () => {
               <div className="row d-flex gap-2 my-3 mx-1">
                 {product?.size.map((sizes, index) => (
                   <button
-                    key={index}  // Add a key prop to the button
+                    key={index}  
                     className={`col-md-2 border border-dark p-2 text-center button-size ${selectedSize === sizes ? "selected-size" : ""
                       }`}
-                    onClick={() => handleSizeSelection(sizes)}  // Handle size selection
+                    onClick={() => handleSizeSelection(sizes)} 
                     value={sizes}
                   >
                     {sizes}
@@ -313,6 +317,39 @@ export const CardView = () => {
         
       </div>
       <BuyNowModal isOpen={isBuyNow} setIsOpen={setIsBuyNow} productId={productId} size={selectedSize} />
+      
+      {showSigninModal && (
+        <SigninModal
+          show={showSigninModal}
+          handleClose={handleCloseSignin}
+          openSignupModal={() => {
+            handleCloseSignin();
+            handleShowSignUp();
+          }}
+        />
+      )}
+
+      {showSignUpModal && (
+        <SignupModal
+          show={showSignUpModal}
+          handleClose={handleCloseSignUp}
+          handleOpenOTP={handleOpenOTP}
+          openSigninModal={() => {
+            handleCloseSignUp();
+            handleShowSignin();
+          }}
+          formData={formData}
+          onFormDataUpdate={handleFormDataUpdate}
+        />
+      )}
+
+      {showOTPModal && (
+        <OTPModal
+          show={showOTPModal}
+          handleClose={handleCloseOTP}
+          formData={formData}
+        />
+      )}
       <Footer />
     </>
   );

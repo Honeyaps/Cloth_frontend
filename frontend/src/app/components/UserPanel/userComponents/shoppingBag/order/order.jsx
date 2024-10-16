@@ -42,7 +42,6 @@ export const Order = ({ isOpen, setIsOpen }) => {
 
             try {
                 const response = await UserAPIService.getCartItems({ userId });
-                console.log("modaldata console",response.data.product);
                 setCartItems(response.data.product);
             } catch (error) {
                 console.error("Error fetching cart items:", error);

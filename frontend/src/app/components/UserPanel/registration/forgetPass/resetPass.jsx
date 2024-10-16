@@ -3,29 +3,30 @@ import { Footer } from "../../userComponents/footer/footer";
 import { Navbar } from "../../userComponents/navbar/navbar";
 import UserAPIService from "../../../../services/user_service";
 import { useState } from "react";
+import { toast } from "sonner";
+import { LoadingButton } from "../../../../shared/helpers/helper";
 
 export const FPresetPass = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState(null);
-    const [successMessage, setSuccessMessage] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
+    const [isLoading, setIsLoading] = useState(false); 
     const email = location.state?.email;  
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         if (password !== confirmPassword) {
-            setError("Passwords do not match.");
+           toast.error('Passwords do not match');
             return;
         }
 
         try {
             const response = await UserAPIService.FPpassReset({ email, password });
-            setSuccessMessage(response.data.message);
+            toast.success(response.data.message || 'Password reset successfully');
             navigate('/');
         } catch (error) {
-            setError(error.response.data.message);
+            toast.error(error.response.data.message || 'Error occurred while resetting password');
         }
     };
 
@@ -67,9 +68,12 @@ export const FPresetPass = () => {
                             required
                         />
                     </div>
-                    {error && <p className='text-danger'>{error}</p>}
-                    {successMessage && <p className='text-success'>{successMessage}</p>}
-                    <button type='submit' className='form_btn mt-2 w-100'>Save</button>
+                    <LoadingButton
+                    isLoading={isLoading} 
+                    type='submit' 
+                    className='form_btn mt-2 w-100'>
+                        Save
+                    </LoadingButton>
                 </form>
             </div>
             <Footer />

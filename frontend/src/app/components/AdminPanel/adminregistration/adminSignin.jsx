@@ -3,15 +3,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './adminSignin.css';
 import AdminAPIService from '../../../services/admin_service';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { LoadingButton } from '../../../shared/helpers/helper';
 
 export const AdminSignin = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     });
-    const [error, setError] = useState(null);
-    const [successMessage, setSuccessMessage] = useState(null);
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false); 
     
     const handleOnChange = (e) => {
         const { name, value } = e.target;
@@ -20,19 +21,21 @@ export const AdminSignin = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setIsLoading(true);
         try {
             const response = await AdminAPIService.signInAdmin(formData);
             const token = response.data.token;
             if (token) {
                 localStorage.setItem('admintoken', token);
-                setSuccessMessage(response.data.message);
+                toast.success(response.data.message || 'Sign in successful');
                 navigate('/admin-portal');
-            } else {
-                setError('Token not found in response');
-            }
+            } 
         } catch (error) {
-            setError(error.response.data.message);
+            toast.error(error.response.data.message || 'Error occurred while signing in');
+        } finally {
+            setIsLoading(false);
         }
+         
     };
 
     return (
@@ -68,13 +71,13 @@ export const AdminSignin = () => {
                         required
                     />
                 </div>
-
-                {error && <p className='text-danger'>{error}</p>}
-                {successMessage && <p className='text-success'>{successMessage}</p>}
                
-                <button type='submit' className='form_btn w-100 mt-2 bg-black'>
+                <LoadingButton 
+                isLoading={isLoading}
+                type='submit' 
+                className='form_btn w-100 mt-2 bg-black'>
                     Sign in
-                </button>
+                </LoadingButton>
 
                 <p className='text-center text-white mt-3'>For any queries, please contact us at: +91 78149-98055</p>
               

@@ -3,9 +3,11 @@ import { Footer } from "../footer/footer";
 import { Navbar } from "../navbar/navbar";
 import UserAPIService from "../../../../services/user_service";
 import { useNavigate } from "react-router-dom";
+import { RiArrowRightLine } from "react-icons/ri";
 
 export const Favourites = () => {
-    const [cartItems, setCartItems] = useState([]); 
+    const [cartItems, setCartItems] = useState([]);
+    const [saleDate, setSaleDate] = useState("");
     const navigate = useNavigate();
     const userId = localStorage.getItem("userId");
 
@@ -14,17 +16,27 @@ export const Favourites = () => {
             try {
                 const response = await UserAPIService.getCartItems({ userId });
                 const suggestedItems = response.data.product.filter(item => item.status === -9);
-                setCartItems(suggestedItems);  
+                setCartItems(suggestedItems);
             } catch (error) {
                 console.error("Error fetching cart items:", error);
             }
         };
 
+        const today = new Date();
+        const tenDaysLater = new Date(today.setDate(today.getDate() + 10));
+
+        // Format the date as needed
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = tenDaysLater.toLocaleDateString(undefined, options);
+
+        // Set the sale date in state
+        setSaleDate(formattedDate);
+
         fetchCartItems();
-    }, [userId]); 
+    }, [userId]);
 
     const handleProductClick = (productId) => {
-        navigate(`/product-view/${productId}`); 
+        navigate(`/product-view/${productId}`);
     };
 
     return (
@@ -38,8 +50,8 @@ export const Favourites = () => {
                             <div
                                 key={item.productId}
                                 className="col-lg-2 col-md-3 col-sm-4 col-6 mb-4"
-                                onClick={() => handleProductClick(item.productId)} 
-                                style={{ cursor: 'pointer' }} 
+                                onClick={() => handleProductClick(item.productId)}
+                                style={{ cursor: 'pointer' }}
                             >
                                 <img
                                     src={item.productDetail.card_pic}
@@ -47,11 +59,19 @@ export const Favourites = () => {
                                     className="card_img img-fluid"
                                 />
                                 <h6>{item.productDetail.productName}</h6>
-                                <p className="price">RS {item.productDetail.price}</p>
+                                <p className="price">RS. {item.productDetail.price}</p>
                             </div>
                         ))
                     ) : (
-                        <p>No products found.</p>
+                        <div className="text-center mt-5">
+                            <h6 className=" text-muted">
+                                The H&K sale is going to start on <strong>{saleDate}</strong>
+                                <br />
+                            </h6>
+
+                            <a href="/newin" className="mx-3 text-decoration-none text-dark mt-3">Explore more <RiArrowRightLine /></a>
+                        </div>
+
                     )}
                 </div>
             </div>

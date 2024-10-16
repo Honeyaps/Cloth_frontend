@@ -95,7 +95,7 @@ export const BuyNowModal = ({ isOpen, setIsOpen, productId, size }) => {
                         <div className='col-md-12'>
                             <div className='d-flex justify-content-between'>
                                 <div>Subtotal</div>
-                                <div>RS. {productDetails ? productDetails.price : '0.00'}</div>
+                                <div>RS. {productDetails ? productDetails.price.toFixed(2) : '0.00'}</div>
                             </div>
                             <div className='d-flex justify-content-between'>
                                 <div>Shipping</div>
@@ -104,7 +104,7 @@ export const BuyNowModal = ({ isOpen, setIsOpen, productId, size }) => {
                             <hr />
                             <div className='d-flex justify-content-between'>
                                 <h5>Total</h5>
-                                <h6>RS. {productDetails ? productDetails.price : '0.00'}</h6>
+                                <h6>RS. {productDetails ? productDetails.price.toFixed(2) : '0.00'}</h6>
                             </div>
                         </div>
                     </div>
