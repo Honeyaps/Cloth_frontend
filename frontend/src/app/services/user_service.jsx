@@ -66,6 +66,11 @@ class UserAPIService {
       return response.data;
     }
 
+    static async getOrderList(data) {
+      const response = await axios.post(`${API_URL}/user/getOrder`, data)
+      return response.data;
+    }
+
 
 
 

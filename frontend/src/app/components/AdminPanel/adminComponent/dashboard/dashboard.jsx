@@ -19,7 +19,7 @@ export const Dashboard = () => {
 
   useEffect(() => {
     fetchDashboardData(dateRange); 
-  }, [ dateRange ]);
+  }, []);
 
   const fetchDashboardData = async (range) => {
     setLoading(true);

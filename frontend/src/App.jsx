@@ -15,6 +15,7 @@ import { AdminPortal } from './app/components/AdminPanel/adminComponent/adminPor
 import { CardView } from './app/components/UserPanel/userComponents/cards/cardView/cardView';
 import { Toaster } from 'sonner';
 import { CartProvider } from './app/services/common_service';
+import { OrderList } from './app/components/UserPanel/userComponents/orderList/orderList';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
         <Route path="/request-resetpassword/otp/reset-password" element={<FPresetPass />} />
         <Route path="/admin-portal" element={<AdminPortal />} />
         <Route path="/product-view/:productId" element={<CardView />} />
+        <Route path="/order-list" element={<OrderList />} />
       </Routes>
     </Router>
     </CartProvider>

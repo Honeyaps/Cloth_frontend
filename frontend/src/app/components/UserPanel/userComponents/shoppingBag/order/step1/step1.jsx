@@ -62,7 +62,7 @@ export const Step1 = ({ productId, size }) => {
             navigate("/");
         } catch (error) {
             console.error("Error placing order:", error);
-            toast.error("Error placing order. Please try again.");
+            toast.error("Invalid token. Please login again.");
         } finally {
             setIsLoading(false);
         }

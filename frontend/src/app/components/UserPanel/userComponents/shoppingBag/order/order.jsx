@@ -42,7 +42,9 @@ export const Order = ({ isOpen, setIsOpen }) => {
 
             try {
                 const response = await UserAPIService.getCartItems({ userId });
-                setCartItems(response.data.product);
+                const filteredItems = response.data.product.filter(item => item.status === 1);
+
+                setCartItems(filteredItems);
             } catch (error) {
                 console.error("Error fetching cart items:", error);
             }
