@@ -197,12 +197,12 @@ export const Navbar = () => {
           </div>
 
           <div className="d-flex">
-            <div className="me-4 d-block text-center handbag-container">
+            <a href="/shoppingbag" className="me-4 d-block text-center text-dark">
               <div className="handbag-icon-wrapper">
                 <BsHandbag className="nav-icon" />
               </div>
-              <div className="handbag-count">0</div>
-            </div>
+              <div className="handbag-count">({cartCount})</div>
+            </a>
             <div>
               {!isOpen ? (
                 <SlMenu className="nav-icon" onClick={toggleNavbar} />
@@ -214,14 +214,47 @@ export const Navbar = () => {
         </div>
 
         {/* Search Bar for Mobile */}
-        <div className="row search_bar_row  ">
-          <div className="col-12 d-flex justify-content-center">
-            <div className="d-flex align-items-center handbag-container">
-              <GoSearch className="nav-icon search-icon" />
-              <input type="text" placeholder="Search" className="search_bar" />
+        {/* Search Bar for Desktop */}
+         <div className="row search_bar_row">
+    <div className="col-12 d-flex justify-content-center">
+      <div className="align-items-center handbag-container" style={{ position: "relative" }}>
+        <GoSearch className="nav-icon search-icon" />
+        <input
+          type="text"
+          placeholder="Search"
+          className="search_bar"
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            handleOnSearch(e.target.value); 
+          }}
+        />
+        {/* Absolutely positioned search results dropdown */}
+        {products.length > 0 && (
+          <div
+            className="search-results bg-white"
+            style={{
+              position: "absolute",
+              top: "100%", 
+              left: "0",
+              width: "100%",
+              zIndex: "10",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)"
+            }}
+          >
+            <div className="border-0 w-100 p-2 text-start bg-transparent">
+              {products.map((product) => (
+                <a href={`/product-view/${product._id}`} key={product._id} className="mt-2">
+                  {product.productName}
+                  <br />
+                </a>
+              ))}
             </div>
           </div>
-        </div>
+        )}
+      </div>
+    </div>
+  </div>
 
         {/* Side Navbar for Mobile */}
         <div className={`side-navbar ${isOpen ? 'open' : ''}`}>
@@ -232,23 +265,33 @@ export const Navbar = () => {
               </a>
             </li>
             <li>
-              <a href="#">
-                <RiCustomerService2Fill className="nav-icon" /> Customer Service
-              </a>
-            </li>
-            <li>
               <a href="/newin">
                 <IoNewspaperOutline className="nav-icon" /> Newin
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="/offers">
+                <MdOutlineLocalOffer className="nav-icon" /> Offers
+              </a>
+            </li>
+            {/* <li>
+              <a href="/shoppingbag">
+                <IoBagCheckOutline className="nav-icon" /> Shopping bag
+              </a>
+            </li> */}
+            <li>
+              <a href="/customer-service">
+                <RiCustomerService2Fill className="nav-icon" /> Customer Service
+              </a>
+            </li>
+            <li>
+              <a href="/store-locator">
                 <GrMap className="nav-icon" /> Find a store
               </a>
             </li>
             <li>
-              <a href="#">
-                <CiLogout className="nav-icon" /> Log out
+              <a href="/order-list">
+              <LiaLuggageCartSolid className="nav-icon fs-4" /> Orders
               </a>
             </li>
           </ul>

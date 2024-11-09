@@ -7,6 +7,9 @@ import UserAPIService from "../../../../services/user_service";
 import { toast } from "sonner";
 import { useCart } from "../../../../services/common_service";
 import { Order } from "./order/order";
+import { OTPModal } from "../../registration/otpverif";
+import { SignupModal } from "../../registration/signup";
+import { SigninModal } from "../../registration/signin";
 
 
 export const ShoppingBag = () => {
@@ -15,9 +18,37 @@ export const ShoppingBag = () => {
     const token = localStorage.getItem("token");
     const [isOpen, setIsOpen] = useState(false);
 
+    const [showSignUpModal, setShowSignUpModal] = useState(false);
+    const [showOTPModal, setShowOTPModal] = useState(false);
+    const [showSigninModal, setShowSigninModal] = useState(false);
+    const [formData, setFormData] = useState({
+        email: '',
+        username: '',
+        password: '',
+    });
+
+    const handleFormDataUpdate = (newFormData) => {
+        setFormData(newFormData);
+    };
+
+    const handleShowSignUp = () => setShowSignUpModal(true);
+    const handleCloseSignUp = () => setShowSignUpModal(false);
+
+    const handleShowSignin = () => setShowSigninModal(true);
+    const handleCloseSignin = () => setShowSigninModal(false);
+
+    const handleOpenOTP = () => {
+        if (!showOTPModal) {
+            setShowSignUpModal(false);
+            setShowOTPModal(true);
+        }
+    };
+
+    const handleCloseOTP = () => setShowOTPModal(false);
+
     const checkout = () => {
         if (!token) {
-            toast.error("Please login to checkout");
+            toast.error("Please sign in to checkout");
             return;
         }
         if (cartItems.length === 0) {
@@ -180,7 +211,7 @@ export const ShoppingBag = () => {
                         <div>
                             <div>
                                 <p>Sign in before you checkout</p>
-                                <button className="form_btn w-100 text-black bg-white border border-dark">
+                                <button className="form_btn w-100 text-black bg-white border border-dark" onClick={handleShowSignin} >
                                     Sign in
                                 </button>
                             </div>
@@ -213,8 +244,44 @@ export const ShoppingBag = () => {
                     </p>
                 </div>
                 <Order isOpen={isOpen} setIsOpen={setIsOpen} />
+
+
             </div>
             <Footer />
+
+            {showSigninModal && (
+                <SigninModal
+                    show={showSigninModal}
+                    handleClose={handleCloseSignin}
+                    openSignupModal={() => {
+                        handleCloseSignin();
+                        handleShowSignUp();
+                    }}
+                />
+            )}
+
+            {showSignUpModal && (
+                <SignupModal
+                    show={showSignUpModal}
+                    handleClose={handleCloseSignUp}
+                    handleOpenOTP={handleOpenOTP}
+                    openSigninModal={() => {
+                        handleCloseSignUp();
+                        handleShowSignin();
+                    }}
+                    formData={formData}
+                    onFormDataUpdate={handleFormDataUpdate}
+                />
+            )}
+
+            {showOTPModal && (
+                <OTPModal
+                    show={showOTPModal}
+                    handleClose={handleCloseOTP}
+                    formData={formData}
+                />
+            )}
+
         </>
     );
 };

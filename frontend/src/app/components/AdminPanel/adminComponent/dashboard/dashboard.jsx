@@ -10,6 +10,8 @@ import { CiSearch } from 'react-icons/ci';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { HiOutlineRefresh } from "react-icons/hi";
+import { Bar } from 'react-chartjs-2';
+import 'chart.js/auto';
 
 export const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
@@ -18,7 +20,7 @@ export const Dashboard = () => {
   const [startDate, endDate] = dateRange;
 
   useEffect(() => {
-    fetchDashboardData(dateRange); 
+    fetchDashboardData(dateRange);
   }, []);
 
   const fetchDashboardData = async (range) => {
@@ -43,11 +45,29 @@ export const Dashboard = () => {
   const refreshDashboard = () => {
     const newDateRange = [moment().subtract(30, 'days').toDate(), moment().toDate()];
     setDateRange(newDateRange);
-    fetchDashboardData(newDateRange); 
+    fetchDashboardData(newDateRange);
   };
 
   const handleSearch = () => {
-    fetchDashboardData(dateRange); 
+    fetchDashboardData(dateRange);
+  };
+
+  const chartData = {
+    labels: ['January', 'February', 'March', 'April', 'May'], // Labels for each bar
+    datasets: [
+      {
+        label: 'Revenue',
+        data: [5000, 8000, 7500, 9000, 10000], // Revenue values
+        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
   };
 
   const mergeCategoryData = () => {
@@ -166,7 +186,7 @@ export const Dashboard = () => {
                 <div className="card-body">
                   <p className="card-title">Total Revenue</p>
                   <h5 className="card-text">
-                    <CountUp start={0} end={dashboardData?.totalRevenue || 0} duration={3} easing="easeOutQuint" prefix="$" />
+                    <CountUp start={0} end={dashboardData?.totalRevenue || 0} duration={3} easing="easeOutQuint" prefix="Rs. " />
                   </h5>
                 </div>
               </div>
@@ -203,7 +223,7 @@ export const Dashboard = () => {
                       {mergedCategoryData.map((categoryData, index) => (
                         <tr key={index}>
                           <td>{categoryData.category}</td>
-                          <td>{categoryData.totalRevenue}</td>
+                          <td>Rs. {categoryData.totalRevenue}</td>
                           <td>{categoryData.soldOut}</td>
                         </tr>
                       ))}
@@ -224,6 +244,19 @@ export const Dashboard = () => {
                 </div>
               </div>
             </div>
+
+            {/* Graph for Total Revenue */}
+            {/* <div className="col-md-12 mt-2">
+              <div className="card shadow">
+                <div className="card-header">
+                  <h5 className="card-title">Total Revenue</h5>
+                </div>
+                <div className="card-body" style={{ height: '400px' }}>
+                  <Bar data={chartData} options={chartOptions} />
+                </div>
+              </div>
+            </div> */}
+
           </div>
         </>
       )}

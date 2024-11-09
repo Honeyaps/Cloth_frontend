@@ -30,6 +30,9 @@ export const Step2 = () => {
                                     }}
                                 />
                             </div>
+                            <div className="mt-5">
+                                <h1 className="text-center text-muted">Coming Soon</h1>
+                            </div>
                         </PayPalScriptProvider>
                     </div>
       

@@ -303,9 +303,9 @@ export const CardView = () => {
                       </div>
                       <div className="mb-3">
                         <label htmlFor="name" className="col-md-12">
-                          @Name
+                          @demoName
                         </label>
-                        <div>ljkldbvalbvldb</div>
+                        <div>Lorem ipsum</div>
                       </div>
                     </form>
                   </div>
