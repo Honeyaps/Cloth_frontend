@@ -10,7 +10,7 @@ class AdminAPIService {
     }
 
     static async AddProduct(data) {
-        const headers = { Authorization: `Bearer ${localStorage.getItem('admintoken')}` };
+        const headers = { Authorization: `Bearer ${localStorage.getItem('admintoken')}`,"Content-Type": "multipart/form-data" };
         const response = await axios.post(`${API_URL}/admin/addProduct`, data, { headers });
         return response.data;
     }

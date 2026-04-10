@@ -32,11 +32,12 @@ export const AddProduct = ({ setActiveComponent}) => {
 
     const handleAddProduct = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
+
         if (!validateForm()) {
-            setIsLoading(false);
             return;
         }
+
+        setIsLoading(true);
 
         const formData = new FormData();
         formData.append('productName', productName);
@@ -52,6 +53,9 @@ export const AddProduct = ({ setActiveComponent}) => {
                 formData.append('images', img); 
             }
         });
+
+         // 🔥 DEBUG
+    console.log([...formData.entries()]);
 
         try {
             const response = await AdminAPIService.AddProduct(formData);
@@ -191,7 +195,6 @@ export const AddProduct = ({ setActiveComponent}) => {
                         <LoadingButton
                             type='submit'
                             isLoading={isLoading}
-                            onClick={handleAddProduct}
                             className='form_btn mt-2 px-5 rounded-0'
                         >
                             Save
