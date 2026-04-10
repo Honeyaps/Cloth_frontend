@@ -33,9 +33,7 @@ export const AddProduct = ({ setActiveComponent}) => {
     const handleAddProduct = async (e) => {
         e.preventDefault();
 
-        if (!validateForm()) {
-            return;
-        }
+       
 
         setIsLoading(true);
 
@@ -64,8 +62,8 @@ export const AddProduct = ({ setActiveComponent}) => {
             resetForm();
             setActiveComponent('Products');
         } catch (error) {
-            console.error('Error adding product:', error);
-            toast.error('Error while adding product');
+             console.error(error);
+        toast.error(error?.response?.data?.message || 'Error while adding product');
         } finally {
             setIsLoading(false);
         }
@@ -192,13 +190,13 @@ export const AddProduct = ({ setActiveComponent}) => {
                         </div>
                         <Alert variant="info"><strong>NOTE :</strong> Please upload images smaller than 500KB.</Alert>
 
-                        <LoadingButton
-                            type='submit'
-                            isLoading={isLoading}
-                            className='form_btn mt-2 px-5 rounded-0'
-                        >
-                            Save
-                        </LoadingButton>
+                       <button
+  type="submit"
+  className="form_btn mt-2 px-5 rounded-0"
+  disabled={isLoading}
+>
+  {isLoading ? "Saving..." : "Save"}
+</button>
                     </form>
                 </div>
             </div>
