@@ -9,7 +9,7 @@ export const SpecialCard = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const limit = 4;
+  const limit = 50;
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -53,12 +53,11 @@ export const SpecialCard = () => {
         </div>
       </div>
 
-      <h1 className='mt-5'>
-          Loli Bahia wears H&M Studio A/W 2024, an assertive new collection
-          defined by its versatility and confidence.
-        </h1>
+    <h1 className='mt-5'>
+  Step into bold expression with our latest curated styles — where comfort meets confidence and every piece tells a story.
+</h1>
 
-      <div className="row mt-4 justify-content-center">
+      <div className="row justify-content-center">
         {products.map((product, index) => (
           <div 
           className="col-md-6 mt-5" 
